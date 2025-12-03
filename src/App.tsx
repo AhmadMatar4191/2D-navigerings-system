@@ -35,6 +35,7 @@ export default function App() {
   const departments = useMemo<Department[]>(() => DEPARTMENTS, []);
   const products = useMemo<Product[]>(() => PRODUCTS, []);
 
+  console.log("1231"); 
   return (
     <div className="app-shell">
       <div className="phone">
