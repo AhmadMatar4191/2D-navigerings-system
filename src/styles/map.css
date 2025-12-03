@@ -1,0 +1,21 @@
+/* ====== Karta (MapCanvas i ett kort) ====== */
+.map-area { 
+  padding: 10px 14px 0;
+  display: flex;
+  justify-content: center;   
+  align-items: center;
+  flex: 1; /* fill available vertical space */
+  min-height: 10px; /* minimum height so canvas doesn't collapse */
+}
+
+.map-canvas {
+  display: block;
+  width: 100%; /* fill container width */
+  max-width: 600px; /* optional: limit max size on desktop */
+  height: auto; /* maintain aspect ratio */
+  background: var(--card);
+  border-radius: 18px; 
+  box-shadow: 0 8px 30px rgba(0,0,0,.12);
+  overflow: hidden;
+  /* remove padding from canvas — let MapCanvas handle it */
+}
