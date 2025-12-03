@@ -27,6 +27,18 @@ const STORES: Store[] = [
     note: "Öppet till 22",
   },
 ];
+/* 
+ 77  git init
+   78  git pull https://github.com/Antonclindgren/KOMA-PROJEKT.git
+   90  git branch -m main master
+   79  npm install
+   80  git branch
+   81  git add .
+   83  git remote add origin https://github.com/Antonclindgren/KOMA-PROJEKT.git
+   84  git commit -m "testing"
+   85  git push origin master
+*/
+
 
 export default function App() {
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
