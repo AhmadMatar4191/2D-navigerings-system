@@ -2,68 +2,136 @@
 import type { Product } from "../types";
 
 export const PRODUCTS: Product[] = [
-  // --- Bröd ---
-  { name: "Baguette", dept: "Bröd" },
-  { name: "Fralla", dept: "Bröd" },
-  { name: "Rågbröd", dept: "Bröd" },
-  { name: "Croissant", dept: "Bröd" },
-  { name: "Långfranska", dept: "Bröd" },
-  { name: "Polarbröd", dept: "Bröd" },
+  // --- Frukt & Grönt ---
+  { name: "Äpplen",        dept: "Frukt & Grönt" },
+  { name: "Gurka",         dept: "Frukt & Grönt" },
+  { name: "Bananer",       dept: "Frukt & Grönt" },
+  { name: "Tomater",       dept: "Frukt & Grönt" },
+  { name: "Sallad",        dept: "Frukt & Grönt" },
+  { name: "Morötter",      dept: "Frukt & Grönt" },
 
-  // --- Grönsaker ---
-  { name: "Äpplen", dept: "Grönsaker" },
-  { name: "Gurka", dept: "Grönsaker" },
-  { name: "Bananer", dept: "Grönsaker" },
-  { name: "Tomater", dept: "Grönsaker" },
-  { name: "Sallad", dept: "Grönsaker" },
-  { name: "Morötter", dept: "Grönsaker" },
+  // --- Bröd (mittgång) ---
+  { name: "Baguette",      dept: "Bröd" },
+  { name: "Fralla",        dept: "Bröd" },
+  { name: "Rågbröd",       dept: "Bröd" },
+  { name: "Långfranska",   dept: "Bröd" },
+  { name: "Polarbröd",     dept: "Bröd" },
 
-  // --- Snacks ---
-  { name: "Chips", dept: "Snacks" },
-  { name: "Nötter", dept: "Snacks" },
-  { name: "Popcorn", dept: "Snacks" },
-  { name: "Godis", dept: "Snacks" },
-
-  // --- Dryck ---
-  { name: "Läsk", dept: "Dryck" },
-  { name: "Juice", dept: "Dryck" },
-  { name: "Mineralvatten", dept: "Dryck" },
-  { name: "Energidryck", dept: "Dryck" },
+  // --- Tacos / Tex-Mex (top-band) ---
+  { name: "Tacoskal",      dept: "Tacos / Tex-Mex" },
+  { name: "Tortillabröd",  dept: "Tacos / Tex-Mex" },
+  { name: "Tacosås",       dept: "Tacos / Tex-Mex" },
+  { name: "Guacamole-mix", dept: "Tacos / Tex-Mex" },
 
   // --- Mejeri ---
-  { name: "Mjölk", dept: "Mejeri" },
-  { name: "Yoghurt", dept: "Mejeri" },
-  { name: "Grädde", dept: "Mejeri" },
-  { name: "Smör", dept: "Mejeri" },
-  { name: "Ost", dept: "Mejeri" },
+  { name: "Mjölk",         dept: "Mejeri" },
+  { name: "Yoghurt",       dept: "Mejeri" },
+  { name: "Grädde",        dept: "Mejeri" },
+  { name: "Smör",          dept: "Mejeri" },
+  { name: "Ost",           dept: "Mejeri" },
 
-  // --- Kött ---
-  { name: "Nötfärs", dept: "Kött" },
-  { name: "Kycklingfilé", dept: "Kött" },
-  { name: "Fläskkotlett", dept: "Kött" },
+  // --- Kyl / Kött (vänster vägg) ---
+  { name: "Nötfärs",       dept: "Kyl / Kött" },
+  { name: "Kycklingfilé",  dept: "Kyl / Kött" },
+  { name: "Fläskkotlett",  dept: "Kyl / Kött" },
+  { name: "Bacon",         dept: "Kyl / Kött" },
 
-  // --- Frys ---
-  { name: "Glass", dept: "Frys" },
-  { name: "Frysta bär", dept: "Frys" },
-  { name: "Pommes frites", dept: "Frys" },
+  // --- Frys/Kött (öarna uppe till vänster) ---
+  { name: "Glass",         dept: "Frys/Kött" },
+  { name: "Frysta bär",    dept: "Frys/Kött" },
+  { name: "Pommes frites", dept: "Frys/Kött" },
+  { name: "Kycklingklubbor frysta", dept: "Frys/Kött" },
 
-  // --- Bak ---
-  { name: "Bakpulver", dept: "Bak" },
-  { name: "Vaniljsocker", dept: "Bak" },
-  { name: "Jäst", dept: "Bak" },
-  { name: "Kakao", dept: "Bak" },
+  // --- Pasta / Konserver / Ägg (vänster vägg nedre) ---
+  { name: "Spaghetti",     dept: "Pasta / Konserver / Ägg" },
+  { name: "Makaroner",     dept: "Pasta / Konserver / Ägg" },
+  { name: "Krossade tomater (konserv)", dept: "Pasta / Konserver / Ägg" },
+  { name: "Majs på burk",  dept: "Pasta / Konserver / Ägg" },
+  { name: "Ägg",           dept: "Pasta / Konserver / Ägg" },
+
+  // --- Världens mat (horisontell hylla) ---
+  { name: "Nudlar",        dept: "Världens mat" },
+  { name: "Sojasås",       dept: "Världens mat" },
+  { name: "Currypasta",    dept: "Världens mat" },
+
+  // --- Städ & Tvätt ---
+  { name: "Diskmedel",     dept: "Städ & Tvätt" },
+  { name: "Tvättmedel",    dept: "Städ & Tvätt" },
+  { name: "Sköljmedel",    dept: "Städ & Tvätt" },
+
+  // --- Djur ---
+  { name: "Hundfoder",     dept: "Djur" },
+  { name: "Kattmat",       dept: "Djur" },
+  { name: "Kattsand",      dept: "Djur" },
+
+  // --- Hygien ---
+  { name: "Tandkräm",      dept: "Hygien" },
+  { name: "Schampo",       dept: "Hygien" },
+  { name: "Duschgel",      dept: "Hygien" },
+
+  // --- Godis (hylla) ---
+  { name: "Chokladkaka",   dept: "Godis" },
+  { name: "Gelégodis",     dept: "Godis" },
+  { name: "Karameller",    dept: "Godis" },
+
+  // --- bak (långa gången) ---
+  { name: "Bakpulver",     dept: "bak" },
+  { name: "Vaniljsocker",  dept: "bak" },
+  { name: "Jäst",          dept: "bak" },
+  { name: "Kakao",         dept: "bak" },
+
+  // --- Chips & Snacks (långa gångar) ---
+  { name: "Chips",         dept: "Chips & Snacks" },
+  { name: "Nötter",        dept: "Chips & Snacks" },
+  { name: "Popcorn",       dept: "Chips & Snacks" },
+
+  // --- Fika (gång + högervägg) ---
+  { name: "Kaffe",         dept: "Fika" },
+  { name: "Te",            dept: "Fika" },
+  { name: "Kanelbulle",    dept: "Fika" },
+
+  // --- Pålägg (högervägg) ---
+  { name: "Skinka",        dept: "Pålägg" },
+  { name: "Leverpastej",   dept: "Pålägg" },
+  { name: "Ostskivor",     dept: "Pålägg" },
+
+  // --- Dryck (bottenvägg) ---
+  { name: "Läsk",          dept: "Dryck" },
+  { name: "Juice",         dept: "Dryck" },
+  { name: "Mineralvatten", dept: "Dryck" },
+  { name: "Energidryck",   dept: "Dryck" },
+
+  // --- Snabbmat (höger botten) ---
+  { name: "Färdigpizza",   dept: "Snabbmat" },
+  { name: "Lasagne (fryst)", dept: "Snabbmat" },
+  { name: "Färdigrätt",    dept: "Snabbmat" },
+
+  // --- Blommor ---
+  { name: "Rosor",         dept: "Blommor" },
+  { name: "Tulpaner",      dept: "Blommor" },
 ];
 
 export const DEPT_ICONS: Record<string, string> = {
-  Bröd: "🥐",
-  Grönsaker: "🥕",
-  Bak: "🍩",
-  Konserver: "🥫",
-  Torrvaror: "🌾",
-  Snacks: "🍟",
-  Dryck: "🥤",
-  Kött: "🥩",
-  Fisk: "🐟",
-  Städ: "🧼",
-  Frys: "❄️",
+  "Mejeri": "🥛",
+  "Frukt & Grönt": "🍎",
+  "Bröd": "🥐",
+  "Tacos / Tex-Mex": "🌮",
+  "Kyl / Kött": "🥩",
+  "Frys/Kött": "❄️",
+  "Pasta / Konserver / Ägg": "🍝",
+  "Världens mat": "🌍",
+  "Städ & Tvätt": "🧼",
+  "Djur": "🐾",
+  "Hygien": "🧴",
+  "Godis": "🍬",
+  "bak": "🧁",
+  "Chips & Snacks": "🍟",
+  "Fika": "☕️",
+  "Pålägg": "🥪",
+  "Dryck": "🥤",
+  "Snabbmat": "🍕",
+  "Kassa": "💳",
+  "Snabbkassa": "⚡️",
+  "Blommor": "🌸",
 };
+

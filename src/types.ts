@@ -5,13 +5,18 @@ export interface Store {
   note?: string;
 }
 
-export interface Department {
-  name: string;
+export type Box = {
   r: number;
   c: number;
   h: number;
   w: number;
-}
+};
+
+export type Department = {
+  name: string;
+  boxes: Box[];
+};
+
 
 export interface Product {
   name: string;

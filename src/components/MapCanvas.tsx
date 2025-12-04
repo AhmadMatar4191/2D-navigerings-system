@@ -1,7 +1,7 @@
 // src/components/MapCanvas.tsx
 import { useEffect, useRef } from "react";
 import { ROWS, COLS, CELL } from "../data/departments";
-import blueprintSrc from "../assets/logo.png/KartaÖverAffär.png";
+import blueprintSrc from "../assets/KartaÖverAffär.png";
 import type { Department } from "../types";
 
 const COLORS = {
@@ -16,11 +16,25 @@ const COLORS = {
 interface MapCanvasProps {
   highlighted?: Set<string>;
   departments?: Department[];
+  // blueprint placement options
+  // align: 'center' (default) or 'topleft'
+  blueprintAlign?: "center" | "topleft";
+  // offset in grid cells (columns, rows) applied when not centered
+  blueprintOffset?: { x?: number; y?: number };
+  // additional scale multiplier applied to the image-fit scale
+  blueprintScale?: number;
+  // alpha for the blueprint layer (0-1)
+  blueprintAlpha?: number;
 }
 
 export default function MapCanvas({
   highlighted = new Set<string>(),
   departments = [],
+  // keep centered by default, but lift up a little (negative y)
+  blueprintAlign = "center",
+  blueprintOffset = { x: 0, y: -1 },
+  blueprintScale = 1,
+  blueprintAlpha = 0.5,
 }: MapCanvasProps) {
   const cvsRef = useRef<HTMLCanvasElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -78,6 +92,24 @@ export default function MapCanvas({
       sizeRef.current = { w: cssW, h: cssH, mapScale };
     };
 
+ // 🔽🔽🔽 LÄGG TILL DETTA BLOCK 🔽🔽🔽 
+  const handleClick = (e: MouseEvent) => {
+    const canvas = cvsRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const { mapScale } = sizeRef.current;
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const scaledCell = CELL * mapScale;
+    const c = Math.floor(x / scaledCell);
+    const r = Math.floor(y / scaledCell);
+
+    console.log("cell:", { r, c });
+  };
+// 🔼🔼🔼 LÄGG TILL DETTA BLOCK 🔼🔼🔼 RADERA EFTER 
+
     const draw = (t = 0) => {
       const canvas = cvsRef.current;
       if (!canvas) return;
@@ -93,18 +125,37 @@ export default function MapCanvas({
       ctx.fillStyle = COLORS.bg;
       ctx.fillRect(0, 0, canvasW, canvasH);
 
-      // blueprint layer
+      // blueprint layer (image)
       const img = imgRef.current;
       if (img) {
         ctx.save();
-        ctx.globalAlpha = 0.5;
+        ctx.globalAlpha = Math.max(0, Math.min(1, blueprintAlpha));
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
-        const s = Math.min(canvasW / imgW, canvasH / imgH);
+        // fit image to canvas, then apply optional extra multiplier
+        const s = Math.min(canvasW / imgW, canvasH / imgH) * blueprintScale;
         const dw = imgW * s;
         const dh = imgH * s;
-        const dx = (canvasW - dw) / 2;
-        const dy = (canvasH - dh) / 2;
+
+        let dx = 0;
+        let dy = 0;
+
+        if (blueprintAlign === "center") {
+          dx = (canvasW - dw) / 2;
+          dy = (canvasH - dh) / 2;
+        } else if (blueprintAlign === "topleft") {
+          // top-left anchored (0,0)
+          dx = 0;
+          dy = 0;
+        }
+
+        // allow additional offset in grid cells (columns/rows). Positive x moves image right.
+        const offsetX = (blueprintOffset?.x ?? 0) * scaledCell;
+        const offsetY = (blueprintOffset?.y ?? 0) * scaledCell;
+
+        dx += offsetX;
+        dy += offsetY;
+
         ctx.drawImage(img, dx, dy, dw, dh);
         ctx.restore();
       }
@@ -121,33 +172,66 @@ export default function MapCanvas({
       ctx.globalAlpha = 1;
 
       // departments
-      for (const d of departments) {
-        const x = d.c * scaledCell;
-        const y = d.r * scaledCell;
-        const w = d.w * scaledCell;
-        const h = d.h * scaledCell;
-        const isHit = highlighted.has(String(d.name).toLowerCase());
+for (const d of departments) {
+  const isHit = highlighted.has(String(d.name).toLowerCase());
 
-        if (isHit) {
-          const pulse = 0.75 + 0.25 * Math.abs(Math.sin(animT * 3));
-          ctx.globalAlpha = pulse;
-          ctx.fillStyle = COLORS.highlight;
-          ctx.fillRect(x, y, w, h);
-          ctx.globalAlpha = 1;
-          ctx.strokeStyle = "#ffec99";
-          ctx.lineWidth = Math.max(1, 2 * mapScale);
-          ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-        } else {
-          ctx.fillStyle = COLORS.dept;
-          ctx.globalAlpha = 0.9;
-          ctx.fillRect(x, y, w, h);
-          ctx.globalAlpha = 1;
-        }
+  // rita alla boxar för avdelningen
+  for (const box of d.boxes) {
+    const x = box.c * scaledCell;
+    const y = box.r * scaledCell;
+    const w = box.w * scaledCell;
+    const h = box.h * scaledCell;
 
-        ctx.fillStyle = COLORS.label;
-        ctx.font = `${Math.max(10, 12 * mapScale)}px system-ui`;
-        ctx.fillText(d.name, x + 4 * mapScale, y + 14 * mapScale);
-      }
+    // --- rektangel / highlight ---
+    if (isHit) {
+      const pulse = 0.75 + 0.25 * Math.abs(Math.sin(animT * 3));
+      ctx.globalAlpha = pulse;
+      ctx.fillStyle = COLORS.highlight;
+      ctx.fillRect(x, y, w, h);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "#ffec99";
+      ctx.lineWidth = Math.max(1, 2 * mapScale);
+      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    } else {
+      ctx.fillStyle = COLORS.dept;
+      ctx.globalAlpha = 0.9;
+      ctx.fillRect(x, y, w, h);
+      ctx.globalAlpha = 1;
+    }
+
+    // --- label för DEN HÄR boxen ---
+    ctx.save();
+    ctx.fillStyle = COLORS.label;
+
+    let fontSize = Math.max(9, 12 * mapScale);
+    ctx.font = `${fontSize}px system-ui`;
+
+    const cx = x + w / 2;
+    const cy = y + h / 2;
+
+    const maxWidth = w - 6 * mapScale;
+    const textWidth = ctx.measureText(d.name).width;
+
+    // om texten inte får plats i bredd och hyllan är smal & hög → rotera 90°
+    const shouldRotate = textWidth > maxWidth && h > w;
+
+    if (shouldRotate) {
+      ctx.translate(cx, cy);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(d.name, 0, 0);
+    } else {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(d.name, cx, cy);
+    }
+
+    ctx.restore();
+  }
+}
+
+
 
       // frame
       ctx.strokeStyle = COLORS.border;
@@ -163,22 +247,32 @@ export default function MapCanvas({
     };
 
     // initial size + observer for resize
-    updateSize();
-    const canvasForObserver = cvsRef.current;
-    const parentForObserver =
-      canvasForObserver?.parentElement ?? canvasForObserver ?? null;
-    if (parentForObserver) {
-      ro = new ResizeObserver(updateSize);
-      ro.observe(parentForObserver);
+ updateSize();
+  const canvasForObserver = cvsRef.current;
+  const parentForObserver =
+    canvasForObserver?.parentElement ?? canvasForObserver ?? null;
+  if (parentForObserver) {
+    ro = new ResizeObserver(updateSize);
+    ro.observe(parentForObserver);
+  }
+
+  // 🔽 registrera click-lyssnare
+  const canvas = cvsRef.current;
+  if (canvas) {
+    canvas.addEventListener("click", handleClick);
+  }
+
+  raf = requestAnimationFrame(draw);
+
+  return () => {
+    cancelAnimationFrame(raf);
+    if (ro) ro.disconnect();
+    if (canvas) {
+      canvas.removeEventListener("click", handleClick);
     }
-
-    raf = requestAnimationFrame(draw);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      if (ro) ro.disconnect();
-    };
+  };
   }, [highlighted, departments]);
 
+  
   return <canvas ref={cvsRef} className="map-canvas" />;
 }

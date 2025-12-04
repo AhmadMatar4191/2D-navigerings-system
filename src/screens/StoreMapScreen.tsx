@@ -58,7 +58,12 @@ export default function StoreMapScreen({
 
       <div className="map-area">
         {/* Korten/stilen följer er befintliga CSS (vit bakgrund, rundade hörn) */}
-        <MapCanvas highlighted={highlighted} departments={departments} />
+        {/* Skickar explicit offset: lyft blueprint upp en cell (y: -1). Justera vid behov. */}
+        <MapCanvas
+          highlighted={highlighted}
+          departments={departments}
+          blueprintOffset={{ x: 0, y: -15 }}
+        />
       </div>
 
       {/* Dragbar panel (vi använder vår komponent som flyttar med translateY) */}
