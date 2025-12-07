@@ -118,7 +118,7 @@ export default function BottomSheet({
 
       <DraggableRow className="deptRow">
         {DEPARTMENTS.map((d) => (
-          <DeptChip key={d.name} dept={d} onClick={onPickDept} />
+          <DeptChip key={d.name} dept={d} onClick={onPickDept} isSelected={query === d.name} />
         ))}
       </DraggableRow>
 

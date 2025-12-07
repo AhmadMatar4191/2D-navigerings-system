@@ -11,9 +11,10 @@ import type { Department } from "../types";
 interface DeptChipProps {
   dept: Department;
   onClick: (deptName: string) => void;
+  isSelected?: boolean; 
 }
 
-export default function DeptChip({ dept, onClick }: DeptChipProps) {
+export default function DeptChip({ dept, onClick, isSelected }: DeptChipProps) {
   const deptName = dept.name;
 
   const handlePointerDown = (e: MouseEvent<HTMLButtonElement>) => {
@@ -28,7 +29,7 @@ export default function DeptChip({ dept, onClick }: DeptChipProps) {
   return (
     <button
       key={deptName}
-      className="chip"
+className={`chip ${isSelected ? "selected" : ""}`}
       data-dept={deptName}
       type="button"
       // Stoppa drag-händelser i den omslutande DraggableRow

@@ -23,7 +23,7 @@
 .chips{ display:flex; gap:8px; padding:8px 12px; overflow:auto; user-select: none; }
 .chip{
   width: 80px; height: 80px;       /* <-- cirkelstorlek */
-  border-radius: 50%;  background:hsl(31, 90%, 89%)#f7eedf;             /* ljus som i bilden */
+  border-radius: 50%;  background:var(--card);             /* ljus som i bilden */
   border: 1px solid rgba(0,0,0,.08);
   display:grid; place-items:center;
   -webkit-overflow-scrolling: touch; /* mjuk swipe i iOS */
@@ -33,14 +33,23 @@
   flex: 0 0 auto;                  /* så de inte stretchar */
   cursor:pointer;
   pointer-events: auto;
+  transition: all 0.2s ease; /* Gör att färgbytet sker mjukt */
 }
-
+/* När knappen har klassen .selected */
+.chip.selected {
+  background: var(--accent, #ffd54a); /* Gula färgen */
+  border: 2px solid var(--brand2, #6b4f2a); /* Mörkare ram för kontrast */
+  transform: scale(1.1); /* Gör den liiiite större */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Lyft upp den lite */
+}
 .chipEmoji {
   font-size: 40px;
   margin-top: 4px;
   align-items: center;
   justify-content: center;
 }
+
+/* src/components/sheet.css */
 
 .chipLabel {
   font-size: 10px;
@@ -49,9 +58,16 @@
   color: #3a2817;
   text-align: center;
 
-  padding: 2px 6px;          /* space inside the box */
-  background: hsl(32, 89%, 79%);     /* semi-transparent white */
-  border-radius: 6px; 
+  padding: 2px 6px;
+  background: hsl(32, 89%, 79%);
+  border-radius: 6px;
+
+  /* --- NYA RADER FÖR ATT FIXA PROBLEMET --- */
+  max-width: 72px;         /* Tvinga texten att hålla sig inom cirkelns 80px */
+  white-space: nowrap;     /* Förbjuder texten att byta rad (om du vill ha "...") */
+  overflow: hidden;        /* Döljer text som sticker ut */
+  text-overflow: ellipsis; /* Lägger till "..." på slutet (t.ex. "Pasta /...") */
+  display: block;          /* Krävs för att max-width ska fungera korrekt här */
 }
 
 .draggable-row {
@@ -87,3 +103,49 @@
 .resultSquare:hover{ background: #ffe3a3; cursor: pointer; }
 .resultLabel{ font-size: 12px; font-weight: 600; color:#3a2817; text-align:center; padding:4px; }
 .empty{ grid-column:1/-1; color:#f7ead5; opacity:.85; text-align:center; padding:12px 0; }
+
+
+/* src/styles/sheet.css */
+
+/* Dark Mode för Bottom Sheet */
+body.dark-mode .sheet {
+  background: #292524; /* Mörkgrå (Warm Grey) */
+  color: #e7e5e4;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.6); /* Mörkare skugga */
+}
+
+/* Sökfältet i menyn */
+body.dark-mode .sheet .searchBox {
+  background: #1c1917;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px #44403c;
+}
+
+/* Chippen (Kategoricirklarna) */
+body.dark-mode .chip {
+  background: #44403c; /* Mörkare cirkel */
+  border-color: #57534e;
+}
+
+body.dark-mode .chipLabel {
+  background: #57534e;
+  color: #fff;
+}
+
+/* Resultatrutorna */
+body.dark-mode .resultSquare {
+  background: #44403c;
+  border-color: #57534e;
+  color: #e7e5e4;
+}
+body.dark-mode .resultSquare:hover {
+  background: #57534e;
+}
+body.dark-mode .resultLabel {
+  color: #e7e5e4;
+}
+
+/* "Handtaget" längst upp på sheetet */
+body.dark-mode .grabber {
+  background: #57534e;
+}

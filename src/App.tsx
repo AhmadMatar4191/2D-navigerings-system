@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import StoreSelectScreen from "./screens/StoreSelectScreen";
 import StoreMapScreen from "./screens/StoreMapScreen";
 
@@ -27,6 +27,8 @@ const STORES: Store[] = [
     note: "Öppet till 22",
   },
 ];
+
+
 /* 
  77  git init
    78  git pull https://github.com/Antonclindgren/KOMA-PROJEKT.git
@@ -40,25 +42,41 @@ const STORES: Store[] = [
 */
 
 
+
+
+
 export default function App() {
+  // 1. 👇 HÄR SKAPAR VI STATE FÖR DARK MODE
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // 2. Denna effekt körs varje gång isDarkMode ändras
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [isDarkMode]);
+
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
   const [storeQuery, setStoreQuery] = useState<string>("");
 
   const departments = useMemo<Department[]>(() => DEPARTMENTS, []);
   const products = useMemo<Product[]>(() => PRODUCTS, []);
 
-  console.log("1231"); 
   return (
     <div className="app-shell">
       <div className="phone">
         {!selectedStore ? (
           <>
-            {/* Startsida */}
             <StoreSelectScreen
               stores={STORES}
               query={storeQuery}
               setQuery={setStoreQuery}
               onSelectStore={setSelectedStore}
+              // Nu finns variablerna, så detta kommer fungera:
+              isDarkMode={isDarkMode}
+              onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
             />
           </>
         ) : (
@@ -67,6 +85,7 @@ export default function App() {
             departments={departments}
             products={products}
             onBack={() => setSelectedStore(null)}
+            isDarkMode={isDarkMode} // <--- LÄGG TILL DENNA
           />
         )}
       </div>

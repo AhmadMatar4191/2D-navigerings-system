@@ -173,3 +173,99 @@ html, body { height: 100%; margin: 0; font-family: system-ui, Segoe UI, Roboto, 
 button:focus, input:focus { outline: 2px solid rgba(255,213,74,.6); outline-offset: 2px; }
 .bottom-icons{ user-select:none; touch-action: pan-y; cursor: grab; }
 .bottom-icons.dragging{ cursor: grabbing; }
+
+
+
+
+
+
+
+/* === DARK MODE === */
+/* Denna klass läggs på <body> via React när dark mode är aktivt */
+body.dark-mode {
+  --bg: #1c1917;         /* Mycket mörk brunsvart (istället för beige) */
+  --card: #292524;       /* Mörkgrå-brun för kort */
+  --ink: #e7e5e4;        /* Ljusgrå text (istället för mörkbrun) */
+  --muted: #a8a29e;      /* Dovare text */
+  --line: #44403c;       /* Mörka linjer */
+  --border: #57534e;     /* Mörk ram */
+  
+  --brand1: #a16207;     /* Justerad guld/brun gradient för mörker */
+  --brand2: #713f12;
+  
+  /* Accentfärgen (gult) kan oftast vara samma, eller lite dämpad */
+  --accent: #ca8a04;     
+}
+
+/* Fix för inputs i dark mode så de inte lyser vita */
+body.dark-mode input {
+  background: #0c0a09;
+  color: #e7e5e4;
+  border-color: #44403c;
+}
+
+body.dark-mode .modal {
+  background: #292524; /* Mörk bakgrund på modaler */
+  color: #e7e5e4;
+}
+
+body.dark-mode .modal-header {
+  background: #1c1917;
+  border-bottom-color: #44403c;
+}
+
+body.dark-mode .modal-header h2,
+body.dark-mode .infoContent p,
+body.dark-mode .settingRow {
+  color: #e7e5e4;
+}
+
+body.dark-mode .settingRow {
+  background: rgba(255, 255, 255, 0.05); /* Ljusare bakgrund på rader */
+}
+
+
+/* src/styles/App.css */
+
+/* ... (din tidigare dark mode kod) ... */
+
+/* --- FIX FÖR KNAPPAR I DARK MODE --- */
+
+/* Topp-knappar (Info, Inställningar) och Tillbaka-knappen */
+body.dark-mode .icon-btn,
+body.dark-mode .back-btn {
+  background-color: #44403c; /* Mörkgrå bakgrund */
+  color: #e7e5e4;            /* Ljus ikon */
+  border-color: #57534e;     /* Mörk ram */
+}
+
+/* Sök-knappen (Förstoringsglaset) */
+body.dark-mode .search-icon-btn {
+  background-color: #44403c;
+  color: #e7e5e4;
+  border-color: #57534e;
+}
+
+/* Själva sökfältet (input) på startsidan */
+body.dark-mode .search-input {
+  background-color: #1c1917; /* Väldigt mörk bakgrund */
+  color: #fff;               /* Vit text */
+  border-color: #44403c;
+}
+
+/* Store-cards (Butikslistan på startsidan) */
+body.dark-mode .store-card {
+  background-color: #292524;
+  color: #e7e5e4;
+  border-color: #44403c;
+}
+
+/* Fixar så att brödtexten i Inställningar blir ljus */
+body.dark-mode .settingsContent p {
+  color: #e7e5e4; /* Ljusgrå text */
+}
+
+/* Om du vill att underrubriker/labels ska vara ljusa också */
+body.dark-mode .settingsContent {
+  color: #e7e5e4;
+}

@@ -1,15 +1,24 @@
 // src/components/InfoAndSettingsModals.tsx
 import Modal from "./Modal";
 
-interface BasicModalProps {
+// Interface för enkla modaler (bara öppna/stäng)
+interface InfoModalProps {
   open: boolean;
   onClose: () => void;
 }
 
+// Interface för inställningar (behöver dark mode data)
+interface SettingsModalProps {
+  open: boolean;
+  onClose: () => void;
+  isDarkMode: boolean;
+  onToggle: () => void;
+}
+
 /* ------------------------------------------
-   InfoModal – visar välkomst/info-text
+   InfoModal
 ------------------------------------------- */
-export function InfoModal({ open, onClose }: BasicModalProps) {
+export function InfoModal({ open, onClose }: InfoModalProps) {
   return (
     <Modal open={open} title="Välkommen" onClose={onClose}>
       <div className="infoContent">
@@ -24,23 +33,31 @@ export function InfoModal({ open, onClose }: BasicModalProps) {
 }
 
 /* ------------------------------------------
-   SettingsModal – plats för framtida inställningar
+   SettingsModal
 ------------------------------------------- */
-export function SettingsModal({ open, onClose }: BasicModalProps) {
+// 👇 Här måste vi ta emot 'isDarkMode' och 'onToggle' i måsvingarna!
+export function SettingsModal({ open, onClose, isDarkMode, onToggle }: SettingsModalProps) {
   return (
     <Modal open={open} title="Inställningar" onClose={onClose}>
       <div className="settingsContent">
-        <p>Här kan du lägga till framtida inställningar (t.ex. tema, språk, mm).</p>
+        <p>Anpassa appens utseende.</p>
 
-        <label className="settingRow">
-          <span>Visa avstånd till butiker</span>
-          <input type="checkbox" />
+        {/* DARK MODE KNAPP */}
+        <label className="settingRow" style={{ cursor: "pointer" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span>Mörkt läge</span>
+            <span style={{ fontSize: "1.2em" }}>{isDarkMode ? "🌙" : "☀️"}</span>
+          </div>
+          
+          <input 
+            type="checkbox" 
+            checked={isDarkMode} 
+            onChange={onToggle} 
+            style={{ transform: "scale(1.3)", cursor: "pointer" }}
+          />
         </label>
 
-        <label className="settingRow">
-          <span>Kompakt listvy</span>
-          <input type="checkbox" />
-        </label>
+        
       </div>
     </Modal>
   );

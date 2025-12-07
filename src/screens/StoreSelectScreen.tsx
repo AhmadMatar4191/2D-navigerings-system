@@ -8,6 +8,8 @@ interface StoreSelectScreenProps {
   query: string;
   setQuery: (value: string) => void;
   onSelectStore: (store: Store) => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 export default function StoreSelectScreen({
@@ -15,6 +17,8 @@ export default function StoreSelectScreen({
   query,
   setQuery,
   onSelectStore,
+  isDarkMode,        // <--- Ta emot
+  onToggleDarkMode,  // <--- Ta emot
 }: StoreSelectScreenProps) {
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -101,9 +105,17 @@ export default function StoreSelectScreen({
         </div>
       </div>
 
-      {/* ✅ Modalerna renderas här */}
+      {/* InfoModal behöver inte dark mode, så den är okej */}
       <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
-      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      
+      <SettingsModal 
+        open={settingsOpen} 
+        onClose={() => setSettingsOpen(false)} 
+        
+        // 👇 LÄGG TILL DESSA TVÅ RADER:
+        isDarkMode={isDarkMode}
+        onToggle={onToggleDarkMode}
+      />
     </div>
   );
 }
