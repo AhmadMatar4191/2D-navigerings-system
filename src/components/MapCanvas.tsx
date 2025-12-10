@@ -1,9 +1,9 @@
-// src/components/MapCanvas.tsx
 import { useEffect, useRef } from "react";
 import { ROWS, COLS, CELL } from "../data/departments";
 import blueprintSrc from "../assets/KartaÖverAffär.png";
 import type { Department } from "../types";
 
+// Färgtema för ljust läge
 const LIGHT_COLORS = {
   bg: "#fff6e8",
   grid: "#d7c9b2",
@@ -13,60 +13,67 @@ const LIGHT_COLORS = {
   label: "#553a20",
 };
 
+// Färgtema för mörkt läge
 const DARK_COLORS = {
-  bg: "#1c1917",       // Mörk bakgrund
-  grid: "#44403c",     // Mörka rutnätslinjer
-  border: "#57534e",   // Mörk ram
-  dept: "#292524",     // Mörkgrå hyllor
-  highlight: "#ca8a04",// Mörkare gul highlight
-  label: "#e7e5e4",    // Ljus text
+  bg: "#1c1917", // Mörk bakgrund
+  grid: "#44403c", // Mörka rutnätslinjer
+  border: "#57534e", // Mörk ram
+  dept: "#292524", // Mörkgrå hyllor
+  highlight: "#ca8a04", // Mörkare gul highlight
+  label: "#e7e5e4", // Ljus text
 };
 
 interface MapCanvasProps {
   highlighted?: Set<string>;
   departments?: Department[];
-  // blueprint placement options
-  // align: 'center' (default) or 'topleft'
+
+  // Blueprint-inställningar (karta över butiken)
   blueprintAlign?: "center" | "topleft";
-  // offset in grid cells (columns, rows) applied when not centered
-  blueprintOffset?: { x?: number; y?: number };
-  // additional scale multiplier applied to the image-fit scale
-  blueprintScale?: number;
-  // alpha for the blueprint layer (0-1)
-  blueprintAlpha?: number;
+  blueprintOffset?: { x?: number; y?: number }; // offset i rutnät-celler
+  blueprintScale?: number; // extra skala-faktor på bilden
+  blueprintAlpha?: number; // transparens för blueprint (0–1)
 
-  userPosition?: { r: number, c: number } | null; // <--- NY
-  path?: { r: number, c: number }[];              // <--- NY
-  onMapClick?: (r: number, c: number) => void;    // <--- NY
+  // Positioner för användare och väg (path)
+  userPosition?: { r: number; c: number } | null;
+  path?: { r: number; c: number }[];
 
+  // Klick i kartan (rad/kolumn ges tillbaka)
+  onMapClick?: (r: number, c: number) => void;
 
-  isDarkMode?: boolean; // <--- NY PROP för dark mode
+  // Dark mode-flagga
+  isDarkMode?: boolean;
 }
 
+/**
+ * Canvas-komponent som ritar:
+ * - blueprint-bild (butikskarta)
+ * - rutnät
+ * - avdelningar (departments) med highlight
+ * - användare + väg (path)
+ */
 export default function MapCanvas({
   highlighted = new Set<string>(),
   departments = [],
-  // keep centered by default, but lift up a little (negative y)
   blueprintAlign = "center",
-  blueprintOffset = { x: 0, y: -1 },
+  blueprintOffset = { x: 0, y: -1 }, // lite uppflyttad som standard
   blueprintScale = 1,
   blueprintAlpha = 0.5,
-  userPosition = null, // Default värde
-  path = [],           // Default tom lista
-  onMapClick,          // Callback
-  isDarkMode = false, // Default false
+  userPosition = null,
+  path = [],
+  onMapClick,
+  isDarkMode = false,
 }: MapCanvasProps) {
   const COLORS = isDarkMode ? DARK_COLORS : LIGHT_COLORS;
+
   const cvsRef = useRef<HTMLCanvasElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const sizeRef = useRef<{ w: number; h: number; mapScale: number }>({
     w: 0,
     h: 0,
     mapScale: 1,
-    
   });
 
-  // load blueprint image once
+  // Ladda blueprint-bilden en gång
   useEffect(() => {
     const img = new Image();
     img.src = blueprintSrc;
@@ -78,12 +85,15 @@ export default function MapCanvas({
     };
   }, []);
 
+  // Huvudeffekt: hanterar storlek, ritanimation och klick i kartan
   useEffect(() => {
     let raf = 0;
     let ro: ResizeObserver | null = null;
 
+    // Device Pixel Ratio ⇒ skarpare canvas på t.ex. retina
     const dpr = () => window.devicePixelRatio || 1;
 
+    // Anpassar canvas-storlek till förälderelementet
     const updateSize = () => {
       const canvas = cvsRef.current;
       if (!canvas) return;
@@ -93,7 +103,7 @@ export default function MapCanvas({
       if (!ctx) return;
 
       const parentW = parent.clientWidth;
-      const parentH = parent.clientHeight || parentW * (ROWS / COLS);
+      const parentH = parent.clientHeight || (parentW * ROWS) / COLS;
 
       const cssW = parentW;
       const cssH = parentH;
@@ -105,7 +115,12 @@ export default function MapCanvas({
       canvas.style.height = `${cssH}px`;
       canvas.width = pxW;
       canvas.height = pxH;
+
+      // Skala context så att 1 enhet = 1 CSS-pixel
       ctx.setTransform(dpr(), 0, 0, dpr(), 0, 0);
+
+      // Viktigt: slå av smoothing för skarpare grid/text/linjer
+      ctx.imageSmoothingEnabled = false;
 
       const scaleX = cssW / (COLS * CELL);
       const scaleY = cssH / (ROWS * CELL);
@@ -114,24 +129,24 @@ export default function MapCanvas({
       sizeRef.current = { w: cssW, h: cssH, mapScale };
     };
 
- // 🔽🔽🔽 LÄGG TILL DETTA BLOCK 🔽🔽🔽 
-  const handleClick = (e: MouseEvent) => {
-    const canvas = cvsRef.current;
-    if (!canvas) return;
-    const x = e.offsetX;
-    const y = e.offsetY;
+    // Hanterar klick i kartan → omvandlar pixelposition till (rad, kolumn)
+    const handleClick = (e: MouseEvent) => {
+      const canvas = cvsRef.current;
+      if (!canvas) return;
 
-const scaledCell = CELL * sizeRef.current.mapScale;
-    const c = Math.floor(x / scaledCell);
-    const r = Math.floor(y / scaledCell);
+      const x = e.offsetX;
+      const y = e.offsetY;
 
-    if (onMapClick) {
-      onMapClick(r, c);
-    }
-    console.log("cell:", { r, c }, "pixel:", {x, y}); // Bra för debugging
-  };
-// 🔼🔼🔼 LÄGG TILL DETTA BLOCK 🔼🔼🔼 RADERA EFTER 
+      const scaledCell = CELL * sizeRef.current.mapScale;
+      const c = Math.floor(x / scaledCell);
+      const r = Math.floor(y / scaledCell);
 
+      if (onMapClick) {
+        onMapClick(r, c);
+      }
+    };
+
+    // Ritar allt innehåll på canvas, körs löpande via requestAnimationFrame
     const draw = (t = 0) => {
       const canvas = cvsRef.current;
       if (!canvas) return;
@@ -143,21 +158,28 @@ const scaledCell = CELL * sizeRef.current.mapScale;
       const { w: canvasW, h: canvasH, mapScale } = sizeRef.current;
       const scaledCell = CELL * mapScale;
 
-      // background
+      // Hjälpfunktion: snappar coords till pixelgrid → skarpare text/linjer
+      const snap = (v: number) => Math.round(v) + 0.5;
+
+      // 1. Bakgrund
       ctx.fillStyle = COLORS.bg;
       ctx.fillRect(0, 0, canvasW, canvasH);
 
-      // blueprint layer (image)
+      // 2. Blueprint-lager (butikskartan)
       const img = imgRef.current;
       if (img) {
         ctx.save();
         ctx.globalAlpha = Math.max(0, Math.min(1, blueprintAlpha));
+
+        // Invertera färger i dark mode så att kartan blir tydligare
         if (isDarkMode) {
-            ctx.filter = "invert(1) hue-rotate(180deg) brightness(0.8)";
-          }
+          ctx.filter = "invert(1) hue-rotate(180deg) brightness(0.8)";
+        }
+
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
-        // fit image to canvas, then apply optional extra multiplier
+
+        // Anpassa bilden till canvas, sedan extra skala-faktor
         const s = Math.min(canvasW / imgW, canvasH / imgH) * blueprintScale;
         const dw = imgW * s;
         const dh = imgH * s;
@@ -169,12 +191,11 @@ const scaledCell = CELL * sizeRef.current.mapScale;
           dx = (canvasW - dw) / 2;
           dy = (canvasH - dh) / 2;
         } else if (blueprintAlign === "topleft") {
-          // top-left anchored (0,0)
           dx = 0;
           dy = 0;
         }
 
-        // allow additional offset in grid cells (columns/rows). Positive x moves image right.
+        // Offset i rutnätsceller (positiv x åt höger, positiv y nedåt)
         const offsetX = (blueprintOffset?.x ?? 0) * scaledCell;
         const offsetY = (blueprintOffset?.y ?? 0) * scaledCell;
 
@@ -185,130 +206,142 @@ const scaledCell = CELL * sizeRef.current.mapScale;
         ctx.restore();
       }
 
-      // grid
+      // 3. Rutnät
       ctx.globalAlpha = 0.3;
       ctx.fillStyle = COLORS.grid;
+
       for (let r = 0; r <= ROWS; r++) {
-        ctx.fillRect(0, r * scaledCell, COLS * scaledCell, 1);
+        ctx.fillRect(0, snap(r * scaledCell), COLS * scaledCell, 1);
       }
       for (let c = 0; c <= COLS; c++) {
-        ctx.fillRect(c * scaledCell, 0, 1, ROWS * scaledCell);
+        ctx.fillRect(snap(c * scaledCell), 0, 1, ROWS * scaledCell);
       }
       ctx.globalAlpha = 1;
 
-      // departments
-for (const d of departments) {
-  const isHit = highlighted.has(String(d.name).toLowerCase());
+      // 4. Avdelningar (departments) + highlight
+      for (const d of departments) {
+        const isHit = highlighted.has(String(d.name).toLowerCase());
 
-  // rita alla boxar för avdelningen
-  for (const box of d.boxes) {
-    const x = box.c * scaledCell;
-    const y = box.r * scaledCell;
-    const w = box.w * scaledCell;
-    const h = box.h * scaledCell;
+        for (const box of d.boxes) {
+          const x = box.c * scaledCell;
+          const y = box.r * scaledCell;
+          const w = box.w * scaledCell;
+          const h = box.h * scaledCell;
 
-    // --- rektangel / highlight ---
-    if (isHit) {
-      const pulse = 0.75 + 0.25 * Math.abs(Math.sin(animT * 3));
-      ctx.globalAlpha = pulse;
-      ctx.fillStyle = COLORS.highlight;
-      ctx.fillRect(x, y, w, h);
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = "#ffec99";
-      ctx.lineWidth = Math.max(1, 2 * mapScale);
-      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-    } else {
-      ctx.fillStyle = COLORS.dept;
-      ctx.globalAlpha = 0.9;
-      ctx.fillRect(x, y, w, h);
-      ctx.globalAlpha = 1;
-    }
+          // Rektangel / highlight för träffad avdelning
+          if (isHit) {
+            const pulse = 0.75 + 0.25 * Math.abs(Math.sin(animT * 3));
+            ctx.globalAlpha = pulse;
+            ctx.fillStyle = COLORS.highlight;
+            ctx.fillRect(x, y, w, h);
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = "#ffec99";
+            ctx.lineWidth = Math.max(1, 2 * mapScale);
+            ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+          } else {
+            ctx.fillStyle = COLORS.dept;
+            ctx.globalAlpha = 0.9;
+            ctx.fillRect(x, y, w, h);
+            ctx.globalAlpha = 1;
+          }
 
-    // --- label för DEN HÄR boxen ---
-    ctx.save();
-    ctx.fillStyle = COLORS.label;
+          // Label (text) för denna hylla/avdelning – nu skarpare
+          ctx.save();
+          ctx.fillStyle = COLORS.label;
 
-    let fontSize = Math.max(9, 12 * mapScale);
-    ctx.font = `${fontSize}px system-ui`;
+          const fontSize = Math.max(11, 14 * mapScale);
+          ctx.font = `600 ${fontSize}px system-ui, sans-serif`;
 
-    const cx = x + w / 2;
-    const cy = y + h / 2;
+          // Skugga bakom texten för bättre läsbarhet
+          ctx.shadowColor = isDarkMode
+            ? "rgba(0,0,0,0.6)"
+            : "rgba(255,255,255,0.7)";
+          ctx.shadowBlur = 2 * mapScale;
 
-    const maxWidth = w - 6 * mapScale;
-    const textWidth = ctx.measureText(d.name).width;
+          const cx = x + w / 2;
+          const cy = y + h / 2;
 
-    // om texten inte får plats i bredd och hyllan är smal & hög → rotera 90°
-    const shouldRotate = textWidth > maxWidth && h > w;
+          const maxWidth = w - 6 * mapScale;
+          const textWidth = ctx.measureText(d.name).width;
 
-    if (shouldRotate) {
-      ctx.translate(cx, cy);
-      ctx.rotate(-Math.PI / 2);
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(d.name, 0, 0);
-    } else {
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(d.name, cx, cy);
-    }
+          // Om texten inte får plats på bredden och hyllan är högre än bred → rotera 90°
+          const shouldRotate = textWidth > maxWidth && h > w;
 
-    ctx.restore();
-  }
-}
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
 
-if (path.length > 0) {
-      ctx.strokeStyle = "#e11d48"; // Röd färg
-      ctx.lineWidth = 4 * mapScale;
-      ctx.lineJoin = "round";
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      
-      const startX = path[0].c * scaledCell + scaledCell / 2;
-      const startY = path[0].r * scaledCell + scaledCell / 2;
-      ctx.moveTo(startX, startY);
+          if (shouldRotate) {
+            ctx.translate(snap(cx), snap(cy));
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(d.name, 0, 0);
+          } else {
+            ctx.fillText(d.name, snap(cx), snap(cy));
+          }
 
-      for (let i = 1; i < path.length; i++) {
-        const px = path[i].c * scaledCell + scaledCell / 2;
-        const py = path[i].r * scaledCell + scaledCell / 2;
-        ctx.lineTo(px, py);
+          ctx.restore();
+        }
       }
-      ctx.stroke();
-    }
 
-    // 2. RITA ANVÄNDAREN (Syns ALLTID om userPosition är satt)
-    if (userPosition) {
-      const ux = userPosition.c * scaledCell + scaledCell / 2;
-      const uy = userPosition.r * scaledCell + scaledCell / 2;
+      // 5. Väg (path) – röd linje mellan celler
+      if (path.length > 0) {
+        ctx.strokeStyle = "#e11d48";
+        ctx.lineWidth = 4 * mapScale;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.beginPath();
 
-      // Pulserande effekt
-      const pulse = 4 * Math.sin(animT * 4); 
+        const startX = path[0].c * scaledCell + scaledCell / 2;
+        const startY = path[0].r * scaledCell + scaledCell / 2;
+        ctx.moveTo(startX, startY);
 
-      // Yttre ring (pulserar)
-      ctx.fillStyle = "rgba(0, 122, 255, 0.3)";
-      ctx.beginPath();
-      ctx.arc(ux, uy, (12 * mapScale) + (pulse * 0.5 * mapScale), 0, Math.PI * 2);
-      ctx.fill();
+        for (let i = 1; i < path.length; i++) {
+          const px = path[i].c * scaledCell + scaledCell / 2;
+          const py = path[i].r * scaledCell + scaledCell / 2;
+          ctx.lineTo(px, py);
+        }
 
-      // Inre prick (fast)
-      ctx.fillStyle = "#007AFF"; 
-      ctx.beginPath();
-      ctx.arc(ux, uy, 6 * mapScale, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Vit kant
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = 2 * mapScale;
-      ctx.stroke();
+        ctx.stroke();
+      }
 
-      // Textetikett: "START"
-      ctx.font = `bold ${10 * mapScale}px system-ui`;
-      ctx.fillStyle = "#007AFF";
-      ctx.textAlign = "center";
-      ctx.fillText("START", ux, uy - (14 * mapScale));
-    }
+      // 6. Användarens position ("START") om satt
+      if (userPosition) {
+        const ux = userPosition.c * scaledCell + scaledCell / 2;
+        const uy = userPosition.r * scaledCell + scaledCell / 2;
 
+        const pulse = 4 * Math.sin(animT * 4);
 
-      // frame
+        // Yttre pulserande ring
+        ctx.fillStyle = "rgba(0, 122, 255, 0.3)";
+        ctx.beginPath();
+        ctx.arc(
+          ux,
+          uy,
+          12 * mapScale + pulse * 0.5 * mapScale,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+
+        // Inre prick
+        ctx.fillStyle = "#007AFF";
+        ctx.beginPath();
+        ctx.arc(ux, uy, 6 * mapScale, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vit kant
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2 * mapScale;
+        ctx.stroke();
+
+        // Textetikett "START"
+        ctx.font = `bold ${10 * mapScale}px system-ui`;
+        ctx.fillStyle = "#007AFF";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("START", ux, uy - 14 * mapScale);
+      }
+
+      // 7. Ram runt hela kartan
       ctx.strokeStyle = COLORS.border;
       ctx.lineWidth = Math.max(1, mapScale);
       ctx.strokeRect(
@@ -318,38 +351,49 @@ if (path.length > 0) {
         ROWS * scaledCell - 1
       );
 
+      // Nästa frame
       raf = requestAnimationFrame(draw);
-
-
     };
 
-    // initial size + observer for resize
- updateSize();
-  const canvasForObserver = cvsRef.current;
-  const parentForObserver =
-    canvasForObserver?.parentElement ?? canvasForObserver ?? null;
-  if (parentForObserver) {
-    ro = new ResizeObserver(updateSize);
-    ro.observe(parentForObserver);
-  }
+    // Init: sätt storlek, starta resize-observer, registrera klick och starta animation
+    updateSize();
 
-  // 🔽 registrera click-lyssnare
-  const canvas = cvsRef.current;
-  if (canvas) {
-    canvas.addEventListener("click", handleClick);
-  }
+    const canvasForObserver = cvsRef.current;
+    const parentForObserver =
+      canvasForObserver?.parentElement ?? canvasForObserver ?? null;
 
-  raf = requestAnimationFrame(draw);
-
-  return () => {
-    cancelAnimationFrame(raf);
-    if (ro) ro.disconnect();
-    if (canvas) {
-      canvas.removeEventListener("click", handleClick);
+    if (parentForObserver) {
+      ro = new ResizeObserver(updateSize);
+      ro.observe(parentForObserver);
     }
-  };
-  }, [[highlighted, departments, userPosition, path]]);
 
-  
+    const canvas = cvsRef.current;
+    if (canvas) {
+      canvas.addEventListener("click", handleClick);
+    }
+
+    raf = requestAnimationFrame(draw);
+
+    // Städning när komponenten avmonteras eller beroenden ändras
+    return () => {
+      cancelAnimationFrame(raf);
+      if (ro) ro.disconnect();
+      if (canvas) {
+        canvas.removeEventListener("click", handleClick);
+      }
+    };
+  }, [
+    highlighted,
+    departments,
+    userPosition,
+    path,
+    onMapClick,
+    blueprintAlign,
+    blueprintOffset,
+    blueprintScale,
+    blueprintAlpha,
+    isDarkMode,
+  ]);
+
   return <canvas ref={cvsRef} className="map-canvas" />;
 }

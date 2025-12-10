@@ -1,4 +1,3 @@
-// src/screens/StoreSelectScreen.tsx
 import { useMemo, useState } from "react";
 import { InfoModal, SettingsModal } from "../components/InfoAndSettingsModals";
 import type { Store } from "../types";
@@ -12,17 +11,24 @@ interface StoreSelectScreenProps {
   onToggleDarkMode: () => void;
 }
 
+/**
+ * Skärmen där användaren väljer butik:
+ * - toppbar med info- & inställningsknappar
+ * - sökfält för butiker
+ * - lista med filtrerade butiker
+ */
 export default function StoreSelectScreen({
   stores = [],
   query,
   setQuery,
   onSelectStore,
-  isDarkMode,        // <--- Ta emot
-  onToggleDarkMode,  // <--- Ta emot
+  isDarkMode,
+  onToggleDarkMode,
 }: StoreSelectScreenProps) {
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  // Filtrerar butiker baserat på söksträngen
   const filtered = useMemo(() => {
     const q = (query || "").trim().toLowerCase();
     if (!q) return stores;
@@ -31,6 +37,7 @@ export default function StoreSelectScreen({
 
   return (
     <div className="screen">
+      {/* Toppbar med info- och inställningsknapp */}
       <div className="top-bar">
         {/* Info-knapp */}
         <button
@@ -42,17 +49,16 @@ export default function StoreSelectScreen({
           ℹ
         </button>
 
-        {/* Titel/logotyp */}
         <div className="top-title">Butikskarta</div>
 
-        {/* Inställningar */}
+        {/* Inställningar-knapp */}
         <button
           className="icon-btn"
           onClick={() => setSettingsOpen(true)}
           aria-label="Inställningar"
           type="button"
         >
-          ⚙
+          ⚙️
         </button>
       </div>
 
@@ -76,9 +82,13 @@ export default function StoreSelectScreen({
           </div>
 
           <div className="section-title">Nära dig</div>
+
+          {/* Lista med filtrerade butiker */}
           <div className="store-list">
             {filtered.length === 0 && (
-              <div className="no-results">Inga butiker matchar sökningen.</div>
+              <div className="no-results">
+                Inga butiker matchar sökningen.
+              </div>
             )}
 
             {filtered.map((s) => (
@@ -95,6 +105,7 @@ export default function StoreSelectScreen({
                     <div style={{ fontSize: 12, opacity: 0.7 }}>{s.note}</div>
                   )}
                 </div>
+
                 <div style={{ fontSize: 12, opacity: 0.8 }}>
                   {s.distance ?? ""}
                   {s.distance ? " km" : ""}
@@ -105,14 +116,13 @@ export default function StoreSelectScreen({
         </div>
       </div>
 
-      {/* InfoModal behöver inte dark mode, så den är okej */}
+      {/* Info-modal (på/av) */}
       <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
-      
-      <SettingsModal 
-        open={settingsOpen} 
-        onClose={() => setSettingsOpen(false)} 
-        
-        // 👇 LÄGG TILL DESSA TVÅ RADER:
+
+      {/* Inställningsmodal med dark mode-växlare */}
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
         isDarkMode={isDarkMode}
         onToggle={onToggleDarkMode}
       />

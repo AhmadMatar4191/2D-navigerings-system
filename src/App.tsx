@@ -2,90 +2,97 @@
 import { useEffect, useMemo, useState } from "react";
 import StoreSelectScreen from "./screens/StoreSelectScreen";
 import StoreMapScreen from "./screens/StoreMapScreen";
-
 import { DEPARTMENTS } from "./data/departments";
 import { PRODUCTS } from "./data/products";
-import type { Store, Department, Product } from "./types";
+import { STORES } from "./data/stores";
+import type { Store } from "./types";
 
-const STORES: Store[] = [
-  {
-    id: "ica-maxi",
-    name: "ICA Maxi Garnisonen",
-    distance: 1.2,
-    note: "Öppet till 22",
-  },
-  {
-    id: "hemkop-syd",
-    name: "Hemköp Syd",
-    distance: 2.8,
-    note: "Öppet till 21",
-  },
-  {
-    id: "coop-norra",
-    name: "Coop Norra",
-    distance: 4.1,
-    note: "Öppet till 22",
-  },
-];
+type Screen = "select" | "map";
 
+const STORAGE_KEYS = {
+  darkMode: "butiksmap-darkmode",
+  lastStoreId: "butiksmap-last-store-id",
+} as const;
 
-/* 
- 77  git init
-   78  git pull https://github.com/Antonclindgren/KOMA-PROJEKT.git
-   90  git branch -m main master
-   79  npm install
-   80  git branch
-   81  git add .
-   83  git remote add origin https://github.com/Antonclindgren/KOMA-PROJEKT.git
-   84  git commit -m "testing"
-   85  git push origin master
-*/
+// Läser initialt dark mode-läge från localStorage eller systeminställning
+function loadInitialDarkMode(): boolean {
+  if (typeof window === "undefined") return false;
 
+  const stored = window.localStorage.getItem(STORAGE_KEYS.darkMode);
+  if (stored === "true") return true;
+  if (stored === "false") return false;
 
+  return window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? true
+    : false;
+}
 
+// Hämtar senast valda butik från localStorage (eller första i listan)
+function loadInitialStore(): Store | null {
+  if (typeof window === "undefined") return STORES[0] ?? null;
 
+  const lastId = window.localStorage.getItem(STORAGE_KEYS.lastStoreId);
+  if (!lastId) return STORES[0] ?? null;
+
+  const match = STORES.find((s) => s.id === lastId);
+  return match ?? STORES[0] ?? null;
+}
 
 export default function App() {
-  // 1. 👇 HÄR SKAPAR VI STATE FÖR DARK MODE
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(loadInitialDarkMode);
+  const [screen, setScreen] = useState<Screen>("select");
+  const [selectedStore, setSelectedStore] = useState<Store | null>(
+    loadInitialStore
+  );
+  const [storeQuery, setStoreQuery] = useState("");
 
-  // 2. Denna effekt körs varje gång isDarkMode ändras
+  // Uppdatera body-klassen när dark mode ändras
   useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
+    document.body.classList.toggle("dark-mode", isDarkMode);
+    window.localStorage.setItem(STORAGE_KEYS.darkMode, String(isDarkMode));
   }, [isDarkMode]);
 
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
-  const [storeQuery, setStoreQuery] = useState<string>("");
+  // Spara senast valda butik i localStorage
+  useEffect(() => {
+    if (selectedStore) {
+      window.localStorage.setItem(STORAGE_KEYS.lastStoreId, selectedStore.id);
+    }
+  }, [selectedStore]);
 
-  const departments = useMemo<Department[]>(() => DEPARTMENTS, []);
-  const products = useMemo<Product[]>(() => PRODUCTS, []);
+  const selectedStoreSafe = useMemo(
+    () => selectedStore ?? STORES[0] ?? null,
+    [selectedStore]
+  );
+
+  const handleSelectStore = (store: Store) => {
+    setSelectedStore(store);
+    setScreen("map");
+  };
+
+  const handleBackToSelect = () => {
+    setScreen("select");
+  };
 
   return (
     <div className="app-shell">
       <div className="phone">
-        {!selectedStore ? (
-          <>
-            <StoreSelectScreen
-              stores={STORES}
-              query={storeQuery}
-              setQuery={setStoreQuery}
-              onSelectStore={setSelectedStore}
-              // Nu finns variablerna, så detta kommer fungera:
-              isDarkMode={isDarkMode}
-              onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-            />
-          </>
+        {screen === "select" ? (
+          <StoreSelectScreen
+            stores={STORES}
+            query={storeQuery}
+            setQuery={setStoreQuery}
+            onSelectStore={handleSelectStore}
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+          />
         ) : (
           <StoreMapScreen
-            store={selectedStore}
-            departments={departments}
-            products={products}
-            onBack={() => setSelectedStore(null)}
-            isDarkMode={isDarkMode} // <--- LÄGG TILL DENNA
+            store={selectedStoreSafe}
+            departments={DEPARTMENTS}
+            products={PRODUCTS}
+            onBack={handleBackToSelect}
+            isDarkMode={isDarkMode}
           />
         )}
       </div>

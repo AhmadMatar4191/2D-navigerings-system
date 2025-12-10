@@ -1,4 +1,3 @@
-// src/components/Modal.tsx
 import type { ReactNode, MouseEvent } from "react";
 
 interface ModalProps {
@@ -8,19 +7,29 @@ interface ModalProps {
   onClose: () => void;
 }
 
+/**
+ * Enkel modal-komponent med overlay, titelrad och innehåll.
+ * Visas bara när `open` är true.
+ */
 export default function Modal({ open, title, children, onClose }: ModalProps) {
   if (!open) return null;
 
+  // Klick på overlay → stäng modalen
   const handleOverlayClick = () => {
     onClose();
   };
 
+  // Stoppar klick inne i modalen från att bubbla ut till overlay
   const handleInnerClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick} role="presentation">
+    <div
+      className="modal-overlay"
+      onClick={handleOverlayClick}
+      role="presentation"
+    >
       <div
         className="modal"
         onClick={handleInnerClick}
@@ -32,7 +41,7 @@ export default function Modal({ open, title, children, onClose }: ModalProps) {
           <h2 id="modal-title">{title}</h2>
 
           <button onClick={onClose} aria-label="Stäng" type="button">
-            {/* You can put an icon here, e.g. × */}
+            x
           </button>
         </div>
 

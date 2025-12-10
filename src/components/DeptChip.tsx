@@ -1,26 +1,26 @@
-// src/components/DeptChip.tsx
 import type { MouseEvent } from "react";
 import { DEPT_ICONS } from "../data/products";
 import type { Department } from "../types";
 
 /**
- * Komponent för en enskild avdelningsknapp ("chip").
- * dept – Avdelningsobjektet { name, ... }.
- * onClick – Klickhanterare som anropas med dept.name.
+ * En knapp ("chip") som representerar en avdelning.
+ * Visar ikon + namn och skickar tillbaka avdelningsnamnet vid klick.
  */
 interface DeptChipProps {
   dept: Department;
   onClick: (deptName: string) => void;
-  isSelected?: boolean; 
+  isSelected?: boolean;
 }
 
 export default function DeptChip({ dept, onClick, isSelected }: DeptChipProps) {
   const deptName = dept.name;
 
+  // Hindrar att DraggableRow tror att användaren försöker dra
   const handlePointerDown = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
   };
 
+  // Klick på chip → välj avdelningen
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onClick(deptName);
@@ -29,10 +29,9 @@ export default function DeptChip({ dept, onClick, isSelected }: DeptChipProps) {
   return (
     <button
       key={deptName}
-className={`chip ${isSelected ? "selected" : ""}`}
+      className={`chip ${isSelected ? "selected" : ""}`}
       data-dept={deptName}
       type="button"
-      // Stoppa drag-händelser i den omslutande DraggableRow
       onPointerDown={handlePointerDown}
       onClick={handleClick}
     >

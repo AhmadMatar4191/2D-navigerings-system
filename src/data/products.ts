@@ -1,6 +1,12 @@
-// src/data/products.ts
 import type { Product } from "../types";
-
+export const STORES: Stores[] = [
+  { id: "Ica Maxi Garnisonen", name: "Ica Maxi Garnisonen", distance: 1.2 },
+  { id: "Coop Forum City", name: "Coop Forum City", distance: 2.5 },
+  { id: "Willys Hemma Centralen", name: "Willys Hemma Centralen", distance: 0.8 },
+  { id: "Lidl Västra Hamnen", name: "Lidl Västra Hamnen", distance: 3.1 },
+  { id: "Hemköp Triangeln", name: "Hemköp Triangeln", distance: 2.0 },
+  { id: "Netto Möllevången", name: "Netto Möllevången", distance: 2.7, note: "Småbutik" },
+];
 export const PRODUCTS: Product[] = [
   // --- Frukt & Grönt ---
   { name: "Äpplen",        dept: "Frukt & Grönt" },
@@ -10,14 +16,14 @@ export const PRODUCTS: Product[] = [
   { name: "Sallad",        dept: "Frukt & Grönt" },
   { name: "Morötter",      dept: "Frukt & Grönt" },
 
-  // --- Bröd (mittgång) ---
+  // --- Bröd  ---
   { name: "Baguette",      dept: "Bröd" },
   { name: "Fralla",        dept: "Bröd" },
   { name: "Rågbröd",       dept: "Bröd" },
   { name: "Långfranska",   dept: "Bröd" },
   { name: "Polarbröd",     dept: "Bröd" },
 
-  // --- Tacos / Tex-Mex (top-band) ---
+  // --- Tacos / Tex-Mex ---
   { name: "Tacoskal",      dept: "Tacos / Tex-Mex" },
   { name: "Tortillabröd",  dept: "Tacos / Tex-Mex" },
   { name: "Tacosås",       dept: "Tacos / Tex-Mex" },
@@ -30,26 +36,26 @@ export const PRODUCTS: Product[] = [
   { name: "Smör",          dept: "Mejeri" },
   { name: "Ost",           dept: "Mejeri" },
 
-  // --- Kyl / Kött (vänster vägg) ---
+  // --- Kyl / Kött  ---
   { name: "Nötfärs",       dept: "Kyl / Kött" },
   { name: "Kycklingfilé",  dept: "Kyl / Kött" },
   { name: "Fläskkotlett",  dept: "Kyl / Kött" },
   { name: "Bacon",         dept: "Kyl / Kött" },
 
-  // --- Frys/Kött (öarna uppe till vänster) ---
+  // --- Frys/Kött  ---
   { name: "Glass",         dept: "Frys/Kött" },
   { name: "Frysta bär",    dept: "Frys/Kött" },
   { name: "Pommes frites", dept: "Frys/Kött" },
   { name: "Kycklingklubbor frysta", dept: "Frys/Kött" },
 
-  // --- Pasta / Konserver / Ägg (vänster vägg nedre) ---
+  // --- Pasta / Konserver / Ägg ---
   { name: "Spaghetti",     dept: "Pasta / Konserver / Ägg" },
   { name: "Makaroner",     dept: "Pasta / Konserver / Ägg" },
   { name: "Krossade tomater (konserv)", dept: "Pasta / Konserver / Ägg" },
   { name: "Majs på burk",  dept: "Pasta / Konserver / Ägg" },
   { name: "Ägg",           dept: "Pasta / Konserver / Ägg" },
 
-  // --- Världens mat (horisontell hylla) ---
+  // --- Världens mat ---
   { name: "Nudlar",        dept: "Världens mat" },
   { name: "Sojasås",       dept: "Världens mat" },
   { name: "Currypasta",    dept: "Världens mat" },
@@ -69,39 +75,39 @@ export const PRODUCTS: Product[] = [
   { name: "Schampo",       dept: "Hygien" },
   { name: "Duschgel",      dept: "Hygien" },
 
-  // --- Godis (hylla) ---
+  // --- Godis ---
   { name: "Chokladkaka",   dept: "Godis" },
   { name: "Gelégodis",     dept: "Godis" },
   { name: "Karameller",    dept: "Godis" },
 
-  // --- bak (långa gången) ---
+  // --- bak ---
   { name: "Bakpulver",     dept: "bak" },
   { name: "Vaniljsocker",  dept: "bak" },
   { name: "Jäst",          dept: "bak" },
   { name: "Kakao",         dept: "bak" },
 
-  // --- Chips & Snacks (långa gångar) ---
+  // --- Chips & Snacks ---
   { name: "Chips",         dept: "Chips & Snacks" },
   { name: "Nötter",        dept: "Chips & Snacks" },
   { name: "Popcorn",       dept: "Chips & Snacks" },
 
-  // --- Fika (gång + högervägg) ---
+  // --- Fika ---
   { name: "Kaffe",         dept: "Fika" },
   { name: "Te",            dept: "Fika" },
   { name: "Kanelbulle",    dept: "Fika" },
 
-  // --- Pålägg (högervägg) ---
+  // --- Pålägg ---
   { name: "Skinka",        dept: "Pålägg" },
   { name: "Leverpastej",   dept: "Pålägg" },
   { name: "Ostskivor",     dept: "Pålägg" },
 
-  // --- Dryck (bottenvägg) ---
+  // --- Dryck ---
   { name: "Läsk",          dept: "Dryck" },
   { name: "Juice",         dept: "Dryck" },
   { name: "Mineralvatten", dept: "Dryck" },
   { name: "Energidryck",   dept: "Dryck" },
 
-  // --- Snabbmat (höger botten) ---
+  // --- Snabbmat  ---
   { name: "Färdigpizza",   dept: "Snabbmat" },
   { name: "Lasagne (fryst)", dept: "Snabbmat" },
   { name: "Färdigrätt",    dept: "Snabbmat" },

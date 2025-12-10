@@ -1,4 +1,3 @@
-// src/data/departments.ts
 import type { Department } from "../types";
 
 export const ROWS = 50;
@@ -12,7 +11,7 @@ export const CELL = 20;
  * öar till vänster, långa mittgångar, högervägg + kassa-zon.
  */
 export const DEPARTMENTS: Department[] = [
-  // ───────── Top-band ─────────
+  // Top-band 
   {
     name: "Mejeri",
     boxes: [{ r: 0, c: 3.4, h: 2.2, w: 12.2 }],
@@ -31,7 +30,7 @@ export const DEPARTMENTS: Department[] = [
     ],
   },
 
-  // ───────── Vänster vägg (lång) ─────────
+  // Vänster vägg (lång) 
   {
     name: "Kyl / Kött",
     boxes: [{ r: 3.8, c: 0, h: 18, w: 3 }],
@@ -41,7 +40,7 @@ export const DEPARTMENTS: Department[] = [
     boxes: [{ r: 21.9, c: 0, h: 16.8, w: 3 }],
   },
 
-  // ───────── Öar uppe till vänster (4 block) ─────────
+  //  Öar uppe till vänster (4 block)
   {
     // fyra separata block men samma kategori
     name: "Frys/Kött",
@@ -53,7 +52,7 @@ export const DEPARTMENTS: Department[] = [
     ],
   },
 
-  // ───────── Horisontella rader mitt-vänster ─────────
+  // Horisontella rader mitt-vänster 
   {
     name: "Världens mat",
     boxes: [{ r: 19.7, c: 4.9, h: 1, w: 11.4 }],
