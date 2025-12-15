@@ -418,6 +418,10 @@ body.dark-mode .modal-header {
 
 body.dark-mode .modal-header h2,
 body.dark-mode .infoContent p,
+body.dark-mode .modal-body {
+  color: #e7e5e4;
+}
+
 body.dark-mode .settingRow {
   color: #e7e5e4;
 }
