@@ -76,9 +76,9 @@ export default function StoreSelectScreen({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button className="search-icon-btn" aria-label="Sök" type="button">
+            <span className="search-icon" aria-hidden="true">
               🔎
-            </button>
+            </span>
           </div>
 
           <div className="section-title">Nära dig</div>
