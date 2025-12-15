@@ -13,9 +13,6 @@ interface StoreSelectScreenProps {
 
 /**
  * Skärmen där användaren väljer butik:
- * - toppbar med info- & inställningsknappar
- * - sökfält för butiker
- * - lista med filtrerade butiker
  */
 export default function StoreSelectScreen({
   stores = [],
@@ -119,7 +116,7 @@ export default function StoreSelectScreen({
       {/* Info-modal (på/av) */}
       <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
 
-      {/* Inställningsmodal med dark mode-växlare */}
+      {/* Inställningsmodal med dark mode */}
       <SettingsModal
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}

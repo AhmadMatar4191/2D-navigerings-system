@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useEffect, useMemo, useState } from "react";
 import StoreSelectScreen from "./screens/StoreSelectScreen";
 import StoreMapScreen from "./screens/StoreMapScreen";
@@ -14,7 +13,7 @@ const STORAGE_KEYS = {
   lastStoreId: "butiksmap-last-store-id",
 } as const;
 
-// Läser initialt dark mode-läge från localStorage eller systeminställning
+// Läser initialt darkmode läge från localStorage eller systeminställning
 function loadInitialDarkMode(): boolean {
   if (typeof window === "undefined") return false;
 

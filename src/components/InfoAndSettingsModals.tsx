@@ -1,4 +1,3 @@
-// src/components/InfoAndSettingsModals.tsx
 import Modal from "./Modal";
 
 /**
@@ -20,7 +19,7 @@ interface SettingsModalProps {
 }
 
 /* 
-   InfoModal – generell info (startsidan)
+   InfoModal - (startsidan)
 */
 export function InfoModal({ open, onClose }: SimpleModalProps) {
   return (
@@ -36,7 +35,7 @@ export function InfoModal({ open, onClose }: SimpleModalProps) {
 }
 
 /* 
-   MapInfoModal – info som är specifik för kartan
+   MapInfoModal – (kartskärmen)
 */
 export function MapInfoModal({ open, onClose }: SimpleModalProps) {
   return (
@@ -55,7 +54,7 @@ export function MapInfoModal({ open, onClose }: SimpleModalProps) {
 }
 
 /* ------------------------------------------
-   SettingsModal – mörkt läge m.m.
+   SettingsModal // mörkt läge 
 ------------------------------------------- */
 export function SettingsModal({
   open,

@@ -2,7 +2,6 @@ import type { Store } from "../types";
 
 /**
  * Statisk lista med butiker.
- * Här kan du lägga till / ändra butiker vid behov.
  */
 export const STORES: Store[] = [
   {

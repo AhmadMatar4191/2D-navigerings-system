@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
   { name: "Glass",         dept: "Frys/Kött" },
   { name: "Frysta bär",    dept: "Frys/Kött" },
   { name: "Pommes frites", dept: "Frys/Kött" },
-  { name: "Kycklingklubbor frysta", dept: "Frys/Kött" },
+  { name: "Frysta bär", dept: "Frys/Kött" },
 
   // --- Pasta / Konserver / Ägg ---
   { name: "Spaghetti",     dept: "Pasta / Konserver / Ägg" },

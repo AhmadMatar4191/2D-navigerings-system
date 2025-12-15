@@ -6,8 +6,8 @@ interface DraggableRowProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Horisontellt scroll-rad som kan dras (drag-to-scroll) med mus/pek.
- * Klick på knappar inne i raden fungerar fortfarande (om man inte draggar).
+ * Horisontellt scrollrad som kan dras med mus/pek.
+ * Anpassad för att registrera klick samt drag korrekt. 
  */
 export default function DraggableRow({
   children,
@@ -16,13 +16,13 @@ export default function DraggableRow({
 }: DraggableRowProps) {
   const elRef = useRef<HTMLDivElement | null>(null);
 
-  const startX = useRef(0);                 // Startposition för drag i X-led
-  const startScroll = useRef(0);            // Scroll-läge vid dragstart
+  const startX = useRef(0);                 // Startposition / för drag i X-led
+  const startScroll = useRef(0);            // Scroll-läge / vid dragstart
   const dragging = useRef(false);           // Om vi faktiskt draggar just nu
   const pointerIdRef = useRef<number | null>(null);
   const downTarget = useRef<EventTarget | null>(null);
 
-  const THRESHOLD = 6; // pixlar: under detta räknas det som klick istället för drag
+  const THRESHOLD = 6; // pixlar / om det är under detta räknas det som klick istället för drag
 
   // Sätter upp pointer-hantering för drag-to-scroll
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function DraggableRow({
         // Ignorera om pointer capture inte stöds
       }
 
-      // Om vi inte dragit "på riktigt" → simulera klick på ursprunglig knapp/länk
+      // Om vi inte dragit "på riktigt" => gör klick på ursprunglig knapp/länk
       if (!dragging.current && downTarget.current) {
         const target = downTarget.current as HTMLElement;
         const btn = target.closest?.("button, a, [role='button']");

@@ -1,4 +1,4 @@
-// src/components/MapCanvas.tsx
+//Kommentar: Denna kod är lite DEMO-aktig då den inte är helt justerad//perfekt. 
 import { useEffect, useMemo, useRef } from "react";
 import { ROWS, COLS, CELL } from "../data/departments";
 import blueprintSrc from "../assets/KartaÖverAffär.png";
@@ -16,12 +16,12 @@ const LIGHT_COLORS = {
 
 // Färgtema för mörkt läge
 const DARK_COLORS = {
-  bg: "#1c1917", // Mörk bakgrund
-  grid: "#44403c", // Mörka rutnätslinjer
-  border: "#57534e", // Mörk ram
-  dept: "#292524", // Mörkgrå hyllor
-  highlight: "#ca8a04", // Mörkare gul highlight
-  label: "#e7e5e4", // Ljus text
+  bg: "#1c1917", 
+  grid: "#44403c", 
+  border: "#57534e", 
+  dept: "#292524", 
+  highlight: "#ca8a04", 
+  label: "#e7e5e4", 
 };
 
 interface MapCanvasProps {
@@ -46,9 +46,9 @@ interface MapCanvasProps {
 }
 
 /**
- * Canvas-komponent som ritar:
+ * Canvas komponent som ritar:
  * - blueprint-bild (butikskarta)
- * - rutnät
+ * - rutnätet
  * - avdelningar (departments) med highlight
  * - användare + väg (path)
  */
@@ -94,10 +94,10 @@ export default function MapCanvas({
     let raf = 0;
     let ro: ResizeObserver | null = null;
 
-    // Device Pixel Ratio ⇒ skarpare canvas på t.ex. retina
+    // Device Pixel Ratio => skarpare canvas (blev suddigt ibland) 
     const dpr = () => window.devicePixelRatio || 1;
 
-    // Anpassar canvas-storlek till förälderelementet
+    // Anpassar canvas-storlek till "förälderelementet"
     const updateSize = () => {
       const canvas = cvsRef.current;
       if (!canvas) return;
@@ -123,7 +123,7 @@ export default function MapCanvas({
       // Skala context så att 1 enhet = 1 CSS-pixel
       ctx.setTransform(dpr(), 0, 0, dpr(), 0, 0);
 
-      // Viktigt: slå av smoothing för skarpare grid/text/linjer
+      // slå av smoothing för skarpare grid, text o linjer
       ctx.imageSmoothingEnabled = false;
 
       const scaleX = cssW / (COLS * CELL);
@@ -133,7 +133,7 @@ export default function MapCanvas({
       sizeRef.current = { w: cssW, h: cssH, mapScale };
     };
 
-    // Hanterar klick i kartan → omvandlar pixelposition till (rad, kolumn)
+    // Hanterar klick i kartan => omvandlar pixelposition till (rad, kolumn)
     const handleClick = (e: MouseEvent) => {
       const canvas = cvsRef.current;
       if (!canvas) return;
@@ -160,14 +160,14 @@ export default function MapCanvas({
       const { w: canvasW, h: canvasH, mapScale } = sizeRef.current;
       const scaledCell = CELL * mapScale;
 
-      // Hjälpfunktion: snappar coords till pixelgrid → skarpare text/linjer
+      // Hjälpfunktion (snappar coords till pixelgrid => skarpare text o linjer)
       const snap = (v: number) => Math.round(v) + 0.5;
-
-      // 1. Bakgrund
+      
+      // Bakgrund
       ctx.fillStyle = COLORS.bg;
       ctx.fillRect(0, 0, canvasW, canvasH);
 
-      // 2. Blueprint-lager (butikskartan)
+      // Blueprint-lagret (butikskartan)
       const img = imgRef.current;
       if (img) {
         ctx.save();
@@ -180,7 +180,7 @@ export default function MapCanvas({
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
 
-        // ✅ FITTA bilden i HELA canvasen (contain)
+        // Anpassar bilden i HELA canvasen så att den passar (contain)
         const scale = Math.min(canvasW / imgW, canvasH / imgH);
         const dw = imgW * scale;
         const dh = imgH * scale;
@@ -194,7 +194,7 @@ export default function MapCanvas({
         ctx.restore();
       }
 
-      // 3. Rutnät
+      // Rutnät
       ctx.globalAlpha = 0.3;
       ctx.fillStyle = COLORS.grid;
 
@@ -207,7 +207,7 @@ export default function MapCanvas({
 
       ctx.globalAlpha = 1;
 
-      // 4. Avdelningar (departments) + highlight
+      // Avdelningar (departments) + highlight
       for (const d of departments) {
         const isHit = highlighted.has(String(d.name).toLowerCase());
 
@@ -234,14 +234,14 @@ export default function MapCanvas({
             ctx.globalAlpha = 1;
           }
 
-          // Label (text) för denna hylla/avdelning – nu skarpare
+          // Label (text) för denna hylla/avdelning 
           ctx.save();
           ctx.fillStyle = COLORS.label;
 
           const fontSize = Math.max(11, 14 * mapScale);
           ctx.font = `600 ${fontSize}px system-ui, sans-serif`;
 
-          // Skugga bakom texten för bättre läsbarhet
+          // Skugga bakom texten för bättre läsbarhet (blir skarpare)
           ctx.shadowColor = isDarkMode
             ? "rgba(0,0,0,0.6)"
             : "rgba(255,255,255,0.7)";
@@ -253,7 +253,7 @@ export default function MapCanvas({
           const maxWidth = w - 6 * mapScale;
           const textWidth = ctx.measureText(d.name).width;
 
-          // Om texten inte får plats på bredden och hyllan är högre än bred → rotera 90°
+          // Om texten inte får plats på bredden och hyllan är högre än bred => rotera 90 grader 
           const shouldRotate = textWidth > maxWidth && h > w;
 
           ctx.textAlign = "center";
@@ -271,7 +271,7 @@ export default function MapCanvas({
         }
       }
 
-      // 5. Väg (path) – röd linje mellan celler
+      // Väg (path) – röd linje mellan celler
       if (path.length > 0) {
         ctx.strokeStyle = "#e11d48";
         ctx.lineWidth = 4 * mapScale;
@@ -292,7 +292,7 @@ export default function MapCanvas({
         ctx.stroke();
       }
 
-      // 6. Användarens position ("START") om satt
+      // Användarens position ("START") om satt
       if (userPosition) {
         const ux = userPosition.c * scaledCell + scaledCell / 2;
         const uy = userPosition.r * scaledCell + scaledCell / 2;
@@ -330,7 +330,7 @@ export default function MapCanvas({
         ctx.fillText("START", ux, uy - 14 * mapScale);
       }
 
-      // 7. Ram runt hela kartan
+      // Ram runt hela kartan
       ctx.strokeStyle = COLORS.border;
       ctx.lineWidth = Math.max(1, mapScale);
       ctx.strokeRect(

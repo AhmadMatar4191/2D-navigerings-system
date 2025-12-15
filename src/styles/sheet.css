@@ -1,55 +1,105 @@
 /* ====== BottomSheet (dragbar) ====== */
 .sheet{
-  position: absolute; left:0; right:0; bottom:0;
-  height: 86%; /* max öppet utrymme – styrs via translateY */
+  position: absolute;
+  left:0; right:0; bottom:0;
+  height: 86%;
   background: hsl(32, 45%, 67%);
   color: hsl(32, 89%, 79%);
-  border-top-left-radius: 18px; border-top-right-radius: 18px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
   box-shadow: 0 -8px 30px rgba(0,0,0,.35);
-  transform: translateY(100%); /* start dold → yFraction ändrar den */
-  transition: transform .18s ease; touch-action: none; will-change: transform;
-}
-.handle { display:grid; place-items:center; padding: 8px 0 6px; user-select: none; }
-.grabber{ width:48px; height:5px; border-radius:999px; background:#e9d7c0; opacity:.95; }
-
-.searchRow { padding: 8px 12px; }
-.searchRow input{
-  width:95%; padding: 10px 12px; border-radius: 12px; border: none;
-  background:#f4ebdf; color:#1f2451; outline:none; font-size:14px;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); align-content: center;
+  transform: translateY(100%);
+  transition: transform .18s ease;
+  touch-action: none;
+  will-change: transform;
 }
 
-/* Dept-chips (cirklar) */
-.chips{ display:flex; gap:8px; padding:8px 12px; overflow:auto; user-select: none; }
+/* ====== Handle ====== */
+.handle {
+  display:grid;
+  place-items:center;
+  padding: 8px 0 6px;
+  user-select: none;
+}
+
+.grabber{
+  width:48px;
+  height:5px;
+  border-radius:999px;
+  background:#e9d7c0;
+  opacity:.95;
+}
+
+/* ====== Search row ====== */
+.searchRow {
+  padding: 8px 12px;
+}
+
+/* Wrapper för input + ikon */
+.sheet-search-wrapper{
+  position: relative;
+}
+
+/* Själva inputen */
+.sheet-search-input{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 44px 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background:#f4ebdf;
+  color:#1f2451;
+  outline:none;
+  font-size:14px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+}
+
+/* Ikonen i inputen */
+.sheet-search-icon{
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* ====== Dept-chips (cirklar) ====== */
+.chips{
+  display:flex;
+  gap:8px;
+  padding:8px 12px;
+  overflow:auto;
+  user-select: none;
+}
 
 .chip{
-  width: 80px; height: 80px;       /*  cirkelstorlek */
-  border-radius: 50%;  background:var(--card);             /* ljus som i bilden */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background:var(--card);
   border: 1px solid rgba(0,0,0,.08);
-  display:grid; place-items:center;
-  -webkit-overflow-scrolling: touch; /* mjuk swipe i iOS */
-  touch-action: pan-x;              /* tillåt horisontell drag */
+  display:grid;
+  place-items:center;
   padding:0;
   font-size: 13px;
-  flex: 0 0 auto;                  /* så de inte stretchar */
+  flex: 0 0 auto;
   cursor:pointer;
   pointer-events: auto;
-  transition: all 0.2s ease; /* Gör att färgbytet sker mjukt */
+  transition: all 0.2s ease;
 }
 
-/* När knappen har klassen .selected */
 .chip.selected {
-  background: var(--accent, #ffd54a); /* Gula färgen */
-  border: 2px solid var(--brand2, #6b4f2a); /* Mörkare ram för kontrast */
-  transform: scale(1.1); /* Gör den liiiite större */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Lyft upp den lite */
+  background: var(--accent, #ffd54a);
+  border: 2px solid var(--brand2, #6b4f2a);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .chipEmoji {
   font-size: 40px;
   margin-top: 4px;
-  align-items: center;
-  justify-content: center;
 }
 
 .chipLabel {
@@ -61,13 +111,14 @@
   padding: 2px 6px;
   background: hsl(32, 89%, 79%);
   border-radius: 6px;
-  max-width: 72px;         /* Tvinga texten att hålla sig inom cirkelns 80px */
-  white-space: nowrap;     /* Förbjuder texten att byta rad (om du vill ha "...") */
-  overflow: hidden;        /* Döljer text som sticker ut */
-  text-overflow: ellipsis; /* Lägger till "..." på slutet (t.ex. "Pasta /...") */
-  display: block;          /* Krävs för att max-width ska fungera korrekt här */
+  max-width: 72px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
+/* ====== Draggable row ====== */
 .draggable-row {
   display: flex;
   gap: 8px;
@@ -84,38 +135,66 @@
   cursor: grabbing;
 }
 
-/* Resultatrutor (produktsök) */
+/* ====== Resultatrutor ====== */
 .results{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 8px; padding: 10px 12px 16px;
-  max-height: 240px; overflow: auto;
+  gap: 8px;
+  padding: 10px 12px 16px;
+  max-height: 240px;
+  overflow: auto;
 }
+
 .resultSquare{
-  aspect-ratio: 1 / 1; border-radius: 10px;
-  background: #f0d7ae; border: 1px solid rgba(0,0,0,.08);
-  display:flex; align-items:center; justify-content:center;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: #f0d7ae;
+  border: 1px solid rgba(0,0,0,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   transition: background .15s;
 }
-.resultSquare:hover{ background: #ffe3a3; cursor: pointer; }
-.resultLabel{ font-size: 12px; font-weight: 600; color:#3a2817; text-align:center; padding:4px; }
-.empty{ grid-column:1/-1; color:#f7ead5; opacity:.85; text-align:center; padding:12px 0; }
 
-/* Dark Mode för Bottom Sheet */
-body.dark-mode .sheet {
-  background: #292524; 
-  color: #e7e5e4;
-  box-shadow: 0 -8px 30px rgba(0,0,0,.6); 
+.resultSquare:hover{
+  background: #ffe3a3;
+  cursor: pointer;
 }
 
-/* Sökfältet i menyn */
-body.dark-mode .sheet .searchBox {
-  background: #1c1917;
-  color: #fff;
+.resultLabel{
+  font-size: 12px;
+  font-weight: 600;
+  color:#3a2817;
+  text-align:center;
+  padding:4px;
+}
+
+.empty{
+  grid-column:1/-1;
+  color:#f7ead5;
+  opacity:.85;
+  text-align:center;
+  padding:12px 0;
+}
+
+/* ====== DARK MODE ====== */
+body.dark-mode .sheet {
+  background: #292524;
+  color: #e7e5e4;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.6);
+}
+
+body.dark-mode .sheet-search-input{
+  background:#1c1917;
+  color:#fff;
   box-shadow: inset 0 0 0 1px #44403c;
 }
 
-/* Chippen (Kategoricirklarna) */
+body.dark-mode .sheet-search-icon{
+  color:#e7e5e4;
+  opacity:.7;
+}
+
 body.dark-mode .chip {
   background: #44403c;
   border-color: #57534e;
@@ -126,20 +205,20 @@ body.dark-mode .chipLabel {
   color: #fff;
 }
 
-/* Resultatrutorna */
 body.dark-mode .resultSquare {
   background: #44403c;
   border-color: #57534e;
   color: #e7e5e4;
 }
+
 body.dark-mode .resultSquare:hover {
   background: #57534e;
 }
+
 body.dark-mode .resultLabel {
   color: #e7e5e4;
 }
 
-/* "Handtaget" längst upp på sheetet */
 body.dark-mode .grabber {
   background: #57534e;
 }

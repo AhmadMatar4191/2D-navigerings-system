@@ -4,7 +4,7 @@ import DraggableRow from "./DraggableRow";
 import DeptChip from "./DeptChip";
 import type { Product } from "../types";
 
-// Fördefinierade "snap"-lägen för bottenpanelen (0 = helt uppe, 1 = helt nere)
+// Fördefinierade "snap" lägen för bottenpanelen (0 = helt uppe, 1 = helt nere)
 const SNAP_POINTS: readonly number[] = [0, 0.5, 0.86];
 
 interface BottomSheetProps {
@@ -25,7 +25,7 @@ export default function BottomSheet({
   const [yFraction, setYFraction] = useState(0.5); // 0–1, anger hur långt ned panelen är
   const drag = useRef<{ startY: number; startFrac: number } | null>(null);
 
-  // Hanterar drag (dra-upp/ner) av bottenpanelen
+  // Hanterar drag (dra upp/ner) av bottenpanelen
   useEffect(() => {
     const element = sheetRef.current;
     if (!element) return;
@@ -116,12 +116,17 @@ export default function BottomSheet({
 
       {/* Sökfält för produkt/kategori */}
       <div className="searchRow">
-        <input
-          className="searchBox"
-          placeholder="Sök vara eller kategori…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <div className="sheet-search-wrapper">
+          <input
+            className="sheet-search-input"
+            placeholder="Sök vara eller kategori... (t.ex. mjölk eller mejeri)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <span className="sheet-search-icon" aria-hidden="true">
+            🔎
+          </span>
+        </div>
       </div>
 
       {/* Horisontellt scrollbara avdelnings-chip */}

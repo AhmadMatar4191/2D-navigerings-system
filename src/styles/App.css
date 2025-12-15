@@ -1,17 +1,17 @@
 /* ====== Design tokens (globala) ====== */
 :root {
-  --bg: #f5e1b9;        /* app-bakgrund (beige) */
-  --card: #fff6e8;      /* kort (karta/shelf) */
-  --ink: #2a1b0f;       /* primär text */
-  --muted: #73583a;     /* sekundär text */
-  --brand1: #8a6534;    /* sheet gradient start */
-  --brand2: #6b4f2a;    /* sheet gradient slut */
-  --accent: #ffd54a;    /* highlight */
-  --line: #d7c9b2;      /* grid-linjer (ritas i canvas) */
-  --border: #c29c5f;    /* kort-ram */
+  --bg: #f5e1b9;        
+  --card: #fff6e8;      
+  --ink: #2a1b0f;      
+  --muted: #73583a;    
+  --brand1: #8a6534;    
+  --brand2: #6b4f2a;    
+  --accent: #ffd54a;    
+  --line: #d7c9b2;      
+  --border: #c29c5f;    
 }
 
-/* ====== App-shell: centrerad telefon på desktop ====== */
+/* ====== Base (html/body) ====== */
 html,
 body {
   height: 100%;
@@ -20,6 +20,14 @@ body {
   color: var(--ink);
 }
 
+/* ====== Små UX-fixar ====== */
+button:focus,
+input:focus {
+  outline: 2px solid rgba(255, 213, 74, 0.6);
+  outline-offset: 2px;
+}
+
+/* ====== App-shell: centrerad telefon på desktop ====== */
 .app-shell {
   height: 100vh;
   display: grid;
@@ -41,6 +49,7 @@ body {
   .app-shell {
     place-items: stretch;
   }
+
   .phone {
     width: 100vw;
     height: 100vh;
@@ -86,9 +95,9 @@ body {
 }
 
 .icon-btn:hover {
-  background: #ffffff; /* ljusare beige */
+  background: #ffffff; 
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .back-btn {
@@ -102,14 +111,15 @@ body {
   place-items: center;
   cursor: pointer;
 }
+
 .screenBody {
   padding: 16px 0 24px;
 }
 
 .searchBlock {
-  max-width: 360px;          /* bredd på “kolumnen” */
-  margin: 0 auto;            /* centrera horisontellt */
-  padding: 0 16px;           /* lite luft mot kanterna inne i kolumnen */
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 /* ====== StoreSelectScreen ====== */
@@ -119,6 +129,7 @@ body {
   margin: 6px 2px;
   text-align: center;
 }
+
 .searchLabel {
   font-size: 12px;
   color: var(--muted);
@@ -138,7 +149,7 @@ body {
 
 .search-input {
   width: 82%;
-  padding: 10px 44px 10px 12px; /* extra padding till höger */
+  padding: 10px 44px 10px 12px; 
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: #fff;
@@ -155,12 +166,6 @@ body {
   pointer-events: none;
 }
 
-
-.section-title {
-  margin: 20px 2px 8px;
-  font-weight: 700;
-}
-
 .store-list {
   display: grid;
   gap: 16px;
@@ -171,7 +176,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  text-align: left;;
+  text-align: left;
   padding: 10px 18px;
   border-radius: 140px;
   background: var(--card);
@@ -179,10 +184,11 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   cursor: pointer;
 }
+
 .store-card:hover {
   transform: translateY(-2px);
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .no-results {
@@ -221,11 +227,13 @@ body {
     transform: translateY(8px) scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
+
 .modal-header button:hover {
   background: #ffffff;
   transform: translateY(-1px);
@@ -324,13 +332,6 @@ body {
   pointer-events: auto;
 }
 
-/* ====== Små UX-fixar ====== */
-button:focus,
-input:focus {
-  outline: 2px solid rgba(255, 213, 74, 0.6);
-  outline-offset: 2px;
-}
-
 .bottom-icons {
   user-select: none;
   touch-action: pan-y;
@@ -343,15 +344,15 @@ input:focus {
 
 /* ====== DARK MODE (aktiveras via body.dark-mode) ====== */
 body.dark-mode {
-  --bg: #1c1917;      /* mörk bakgrund */
-  --card: #292524;    /* kort i mörkt läge */
-  --ink: #e7e5e4;     /* ljus primärtext */
-  --muted: #a8a29e;   /* ljus sekundärtext */
-  --line: #44403c;    /* rutnät i canvas */
-  --border: #57534e;  /* kort-ram mörk */
-  --brand1: #a16207;  /* gradient start */
-  --brand2: #713f12;  /* gradient slut */
-  --accent: #ca8a04;  /* gul accent */
+  --bg: #1c1917;      
+  --card: #292524;    
+  --ink: #e7e5e4;    
+  --muted: #a8a29e;  
+  --line: #44403c;    
+  --border: #57534e;  
+  --brand1: #a16207;  
+  --brand2: #713f12;  
+  --accent: #ca8a04; 
 }
 
 /* Inputs i dark mode */
@@ -359,33 +360,6 @@ body.dark-mode input {
   background: #0c0a09;
   color: #e7e5e4;
   border-color: #44403c;
-}
-
-/* Modal i dark mode */
-body.dark-mode .modal {
-  background: #292524;
-  color: #313131;
-}
-body.dark-mode .modal-header button:hover {
-  background: #ffffff;
-}
-body.dark-mode .modal-header h2 button:hover {
-  background: #ffffff;
-}
-
-body.dark-mode .modal-header {
-  background: #1c1917;
-  border-bottom-color: #44403c;
-}
-
-body.dark-mode .modal-header h2,
-body.dark-mode .infoContent p,
-body.dark-mode .settingRow {
-  color: #e7e5e4;
-}
-
-body.dark-mode .settingRow {
-  background: rgba(255, 255, 255, 0.05);
 }
 
 /* === Dark mode-specifika komponenter === */
@@ -404,7 +378,6 @@ body.dark-mode .search-icon {
   opacity: 0.7;
 }
 
-
 /* Sökfält i dark mode */
 body.dark-mode .search-input {
   background-color: #1c1917;
@@ -418,11 +391,40 @@ body.dark-mode .store-card {
   color: #e7e5e4;
   border-color: #44403c;
 }
+
 body.dark-mode .store-card:hover {
   background: #33302d;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* Modal i dark mode */
+body.dark-mode .modal {
+  background: #292524;
+  color: #313131;
+}
+
+body.dark-mode .modal-header button:hover {
+  background: #ffffff;
+}
+
+body.dark-mode .modal-header h2 button:hover {
+  background: #ffffff;
+}
+
+body.dark-mode .modal-header {
+  background: #1c1917;
+  border-bottom-color: #44403c;
+}
+
+body.dark-mode .modal-header h2,
+body.dark-mode .infoContent p,
+body.dark-mode .settingRow {
+  color: #e7e5e4;
+}
+
+body.dark-mode .settingRow {
+  background: rgba(255, 255, 255, 0.05);
+}
 
 /* Brödtext/labels i inställningar i dark mode */
 body.dark-mode .settingsContent p {

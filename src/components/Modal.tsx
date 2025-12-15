@@ -9,12 +9,12 @@ interface ModalProps {
 
 /**
  * Enkel modal-komponent med overlay, titelrad och innehåll.
- * Visas bara när `open` är true.
+ * Visas bara när (open) är true.
  */
 export default function Modal({ open, title, children, onClose }: ModalProps) {
   if (!open) return null;
 
-  // Klick på overlay → stäng modalen
+  // Klick på overlay -> stäng modalen
   const handleOverlayClick = () => {
     onClose();
   };

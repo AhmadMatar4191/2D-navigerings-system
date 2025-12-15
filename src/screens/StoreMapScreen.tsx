@@ -39,12 +39,12 @@ export default function StoreMapScreen({
   const calculatedPath = useMemo(() => {
     if (!userPos || !query) return [];
 
-    // 1) Försök hitta avdelning direkt på namn
+    // Försök hitta avdelning direkt på namn
     let targetDept = departments.find(
       (d) => d.name.toLowerCase() === query.toLowerCase()
     );
 
-    // 2) Om query inte är en avdelning, försök hitta produkt → dess avdelning
+    // Om query inte är en avdelning, försök hitta produkt → dess avdelning
     if (!targetDept) {
       const product = products.find(
         (p) => p.name.toLowerCase() === query.toLowerCase()
@@ -54,7 +54,7 @@ export default function StoreMapScreen({
       }
     }
 
-    // 3) Räkna ut path om vi hittat en avdelning
+    // Räkna ut path om vi hittat en avdelning
     if (targetDept) {
       return findPath(userPos, targetDept.name, departments);
     }

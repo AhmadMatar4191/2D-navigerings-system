@@ -20,7 +20,7 @@ export default function DeptChip({ dept, onClick, isSelected }: DeptChipProps) {
     e.stopPropagation();
   };
 
-  // Klick på chip → välj avdelningen
+  // Klick på chip => välj avdelningen
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onClick(deptName);
