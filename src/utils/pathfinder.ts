@@ -1,4 +1,3 @@
-// src/utils/pathfinder.ts
 import { ROWS, COLS } from "../data/departments";
 import type { Department } from "../types";
 

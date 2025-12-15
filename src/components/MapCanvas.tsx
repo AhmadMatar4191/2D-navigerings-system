@@ -145,9 +145,7 @@ export default function MapCanvas({
       const c = Math.floor(x / scaledCell);
       const r = Math.floor(y / scaledCell);
 
-      if (onMapClick) {
-        onMapClick(r, c);
-      }
+      onMapClick?.(r, c);
     };
 
     // Ritar allt innehåll på canvas, körs löpande via requestAnimationFrame
@@ -175,7 +173,6 @@ export default function MapCanvas({
         ctx.save();
         ctx.globalAlpha = Math.max(0, Math.min(1, blueprintAlpha));
 
-        // Invertera färger i dark mode så att kartan blir tydligare
         if (isDarkMode) {
           ctx.filter = "invert(1) hue-rotate(180deg) brightness(0.8)";
         }
@@ -183,28 +180,15 @@ export default function MapCanvas({
         const imgW = img.naturalWidth || img.width;
         const imgH = img.naturalHeight || img.height;
 
-        // Anpassa bilden till canvas, sedan extra skala-faktor
-        const s = Math.min(canvasW / imgW, canvasH / imgH) * blueprintScale;
-        const dw = imgW * s;
-        const dh = imgH * s;
+        // ✅ FITTA bilden i HELA canvasen (contain)
+        const scale = Math.min(canvasW / imgW, canvasH / imgH);
+        const dw = imgW * scale;
+        const dh = imgH * scale;
 
-        let dx = 0;
-        let dy = 0;
+        const dx = (canvasW - dw) / 2;
 
-        if (blueprintAlign === "center") {
-          dx = (canvasW - dw) / 2;
-          dy = (canvasH - dh) / 2;
-        } else if (blueprintAlign === "topleft") {
-          dx = 0;
-          dy = 0;
-        }
-
-        // Offset i rutnätsceller (positiv x åt höger, positiv y nedåt)
-        const offsetX = (blueprintOffset?.x ?? 0) * scaledCell;
-        const offsetY = (blueprintOffset?.y ?? 0) * scaledCell;
-
-        dx += offsetX;
-        dy += offsetY;
+        // Flytta upp lite (relativt till storleken)
+        const dy = -17 * mapScale;
 
         ctx.drawImage(img, dx, dy, dw, dh);
         ctx.restore();
@@ -220,6 +204,7 @@ export default function MapCanvas({
       for (let c = 0; c <= COLS; c++) {
         ctx.fillRect(snap(c * scaledCell), 0, 1, ROWS * scaledCell);
       }
+
       ctx.globalAlpha = 1;
 
       // 4. Avdelningar (departments) + highlight
@@ -232,12 +217,12 @@ export default function MapCanvas({
           const w = box.w * scaledCell;
           const h = box.h * scaledCell;
 
-          // Rektangel / highlight för träffad avdelning
           if (isHit) {
             const pulse = 0.75 + 0.25 * Math.abs(Math.sin(animT * 3));
             ctx.globalAlpha = pulse;
             ctx.fillStyle = COLORS.highlight;
             ctx.fillRect(x, y, w, h);
+
             ctx.globalAlpha = 1;
             ctx.strokeStyle = "#ffec99";
             ctx.lineWidth = Math.max(1, 2 * mapScale);
@@ -355,7 +340,6 @@ export default function MapCanvas({
         ROWS * scaledCell - 1
       );
 
-      // Nästa frame
       raf = requestAnimationFrame(draw);
     };
 
@@ -381,10 +365,8 @@ export default function MapCanvas({
     // Städning när komponenten avmonteras eller beroenden ändras
     return () => {
       cancelAnimationFrame(raf);
-      if (ro) ro.disconnect();
-      if (canvas) {
-        canvas.removeEventListener("click", handleClick);
-      }
+      ro?.disconnect();
+      canvas?.removeEventListener("click", handleClick);
     };
   }, [
     highlighted,

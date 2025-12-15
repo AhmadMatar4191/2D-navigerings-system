@@ -19,9 +19,9 @@ interface SettingsModalProps {
   onToggle: () => void;
 }
 
-/* ------------------------------------------
+/* 
    InfoModal – generell info (startsidan)
-------------------------------------------- */
+*/
 export function InfoModal({ open, onClose }: SimpleModalProps) {
   return (
     <Modal open={open} title="Välkommen" onClose={onClose}>
@@ -35,9 +35,9 @@ export function InfoModal({ open, onClose }: SimpleModalProps) {
   );
 }
 
-/* ------------------------------------------
+/* 
    MapInfoModal – info som är specifik för kartan
-------------------------------------------- */
+*/
 export function MapInfoModal({ open, onClose }: SimpleModalProps) {
   return (
     <Modal open={open} title="Tips för kartan" onClose={onClose}>

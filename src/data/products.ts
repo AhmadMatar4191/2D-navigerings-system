@@ -1,4 +1,5 @@
 import type { Product } from "../types";
+
 export const PRODUCTS: Product[] = [
   // --- Frukt & Grönt ---
   { name: "Äpplen",        dept: "Frukt & Grönt" },

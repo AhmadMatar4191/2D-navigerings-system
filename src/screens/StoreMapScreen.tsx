@@ -125,8 +125,6 @@ export default function StoreMapScreen({
         <MapCanvas
           highlighted={highlighted}
           departments={departments}
-          // Justera blueprintOffset om du vill flytta bakgrundsbilden
-          blueprintOffset={{ x: 0, y: -9.2 }}
           userPosition={userPos}
           path={calculatedPath}
           onMapClick={(r, c) => setUserPos({ r, c })}
