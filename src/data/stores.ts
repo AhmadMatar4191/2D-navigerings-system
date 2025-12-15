@@ -4,7 +4,7 @@ import type { Store } from "../types";
  * Statisk lista med butiker.
  * Här kan du lägga till / ändra butiker vid behov.
  */
-export const STORES: Store[] = [ 
+export const STORES: Store[] = [
   {
     id: "ica-maxi",
     name: "ICA Maxi Stormarknad",
@@ -34,6 +34,5 @@ export const STORES: Store[] = [
     name: "Lidl Östra",
     distance: 6.3,
     note: "Öppet till 21",
-  }
-
+  },
 ];

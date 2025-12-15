@@ -30,10 +30,6 @@ export function InfoModal({ open, onClose }: SimpleModalProps) {
           Välkommen till butikskartan! Här kan du välja butik, söka efter varor
           och se var i butiken de finns.
         </p>
-        <p>
-          Tips: Tryck på en avdelning eller skriv in en vara för att filtrera
-          listan.
-        </p>
       </div>
     </Modal>
   );
@@ -51,7 +47,7 @@ export function MapInfoModal({ open, onClose }: SimpleModalProps) {
           <li>📍 Tryck på kartan för att välja din startposition.</li>
           <li>🔍 Skriv en vara eller avdelning i sökrutan längst ned.</li>
           <li>✨ Gulmarkerade hyllor visar var dina träffar finns.</li>
-          <li>➡ Den blå punkten visar var du startar, och linjen visar vägen.</li>
+          <li>   Den blå punkten visar var du startar, och linjen visar vägen.</li>
         </ul>
       </div>
     </Modal>

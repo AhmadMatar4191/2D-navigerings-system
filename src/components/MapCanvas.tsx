@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+// src/components/MapCanvas.tsx
+import { useEffect, useMemo, useRef } from "react";
 import { ROWS, COLS, CELL } from "../data/departments";
 import blueprintSrc from "../assets/KartaÖverAffär.png";
 import type { Department } from "../types";
@@ -63,7 +64,10 @@ export default function MapCanvas({
   onMapClick,
   isDarkMode = false,
 }: MapCanvasProps) {
-  const COLORS = isDarkMode ? DARK_COLORS : LIGHT_COLORS;
+  const COLORS = useMemo(
+    () => (isDarkMode ? DARK_COLORS : LIGHT_COLORS),
+    [isDarkMode]
+  );
 
   const cvsRef = useRef<HTMLCanvasElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -393,6 +397,7 @@ export default function MapCanvas({
     blueprintScale,
     blueprintAlpha,
     isDarkMode,
+    COLORS,
   ]);
 
   return <canvas ref={cvsRef} className="map-canvas" />;

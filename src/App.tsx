@@ -30,6 +30,7 @@ function loadInitialDarkMode(): boolean {
 
 // Hämtar senast valda butik från localStorage (eller första i listan)
 function loadInitialStore(): Store | null {
+  // SSR-skydd + fallback
   if (typeof window === "undefined") return STORES[0] ?? null;
 
   const lastId = window.localStorage.getItem(STORAGE_KEYS.lastStoreId);

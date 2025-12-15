@@ -1,12 +1,4 @@
 import type { Product } from "../types";
-export const STORES: Stores[] = [
-  { id: "Ica Maxi Garnisonen", name: "Ica Maxi Garnisonen", distance: 1.2 },
-  { id: "Coop Forum City", name: "Coop Forum City", distance: 2.5 },
-  { id: "Willys Hemma Centralen", name: "Willys Hemma Centralen", distance: 0.8 },
-  { id: "Lidl Västra Hamnen", name: "Lidl Västra Hamnen", distance: 3.1 },
-  { id: "Hemköp Triangeln", name: "Hemköp Triangeln", distance: 2.0 },
-  { id: "Netto Möllevången", name: "Netto Möllevången", distance: 2.7, note: "Småbutik" },
-];
 export const PRODUCTS: Product[] = [
   // --- Frukt & Grönt ---
   { name: "Äpplen",        dept: "Frukt & Grönt" },
