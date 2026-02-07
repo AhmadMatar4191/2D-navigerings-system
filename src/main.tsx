@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import "./styles/app.css";
+import "./styles/App.css";
 import "./styles/map.css";
 import "./styles/sheet.css";
 
